@@ -538,14 +538,13 @@ def simulate_shift(
 
         if next_op is None and next_up is None:
             break
-        if next_op is None or (next_up is not None and next_up[0] <= next_finish):
+        if next_op is None or (next_up is not None and next_finish is not None and next_up[0] <= next_finish):
             assert next_up is not None
             pending_ups.remove(next_up)
             clock = next_up[0]
-            if session.get(Machine, next_up[1]) is not None:
-                machine = session.get(Machine, next_up[1])
-                if machine is not None and machine.status == "down":
-                    machine_up(session, machine.id, at=clock)
+            faulted = session.get(Machine, next_up[1])
+            if faulted is not None and faulted.status == "down":
+                machine_up(session, faulted.id, at=clock)
             continue
 
         assert next_op is not None and next_finish is not None
@@ -556,9 +555,11 @@ def simulate_shift(
             and completions not in interrupts_done
             and next_op.machine_id is not None
         ):
+            # machine_down clears the operation's machine, so keep the id first.
+            faulted_id = next_op.machine_id
             interrupts_done.add(completions)
-            machine_down(session, next_op.machine_id, "Sensor fault", at=clock)
-            pending_ups.append((clock + timedelta(minutes=18), next_op.machine_id))
+            machine_down(session, faulted_id, "Sensor fault", at=clock)
+            pending_ups.append((clock + timedelta(minutes=18), faulted_id))
             downtime_events += 1
             continue
 
@@ -575,6 +576,12 @@ def simulate_shift(
             defect_code="FUNCTIONAL" if scrap else None,
         )
         completions += 1
+
+    for when, machine_id in sorted(pending_ups):
+        clock = when
+        faulted = session.get(Machine, machine_id)
+        if faulted is not None and faulted.status == "down":
+            machine_up(session, faulted.id, at=clock)
 
     completed_count = session.scalar(
         select(func.count()).select_from(ProductionOrder).where(ProductionOrder.status == "completed")

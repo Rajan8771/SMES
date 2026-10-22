@@ -171,6 +171,14 @@ def test_oee_uses_run_time_downtime_and_good_pieces(session):
     assert metrics["oee"] == metrics["availability"] * metrics["performance"] * metrics["quality"]
 
 
+def test_sensor_fault_is_cleared_before_the_shift_ends(session):
+    summary = simulate_shift(session, max_completions=16, with_disruptions=True, at=utcnow())
+    assert summary["downtime_events"] >= 1
+    assert summary["completions"] > 7
+    down = list(session.scalars(select(Machine).where(Machine.status == "down")))
+    assert down == []
+
+
 def test_clean_simulation_tracks_ideal_pace(session):
     summary = simulate_shift(session, max_completions=8, with_disruptions=False, at=utcnow())
     assert summary["completions"] == 8
