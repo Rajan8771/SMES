@@ -17,16 +17,20 @@ The sample line builds two control panels, `CP-100` and `CP-200`, across kitting
 
 `Run shift` replays that loop as a short discrete-event shift, including a repeated sensor fault and a scrap spike, so the board is not empty before a PLC is connected.
 
-## Run it
+## Run it on your LAN
+
+Other people can open the board only when SMES is running on a computer that is on the same Wi-Fi or LAN as they are. `http://127.0.0.1:8000` is that computer alone.
+
+On Windows, right-click `start-lan.bat` and choose **Run as administrator**. On Linux or macOS:
 
 ```bash
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-uvicorn smes.main:app --host 127.0.0.1 --port 8000
+chmod +x start-lan.sh
+./start-lan.sh
 ```
 
-Open [http://127.0.0.1:8000](http://127.0.0.1:8000). Interactive API docs are at [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs).
+The window prints a line like `Other users on LAN: http://192.168.1.20:8000`. Everyone else on that network opens that address. Leave the window open.
+
+On this same computer you can still use [http://127.0.0.1:8000](http://127.0.0.1:8000). API docs are at [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs).
 
 ```bash
 pytest

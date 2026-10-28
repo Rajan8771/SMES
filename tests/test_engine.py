@@ -3,6 +3,7 @@ from datetime import timedelta
 from sqlalchemy import select
 
 from smes.db import utcnow
+from smes.lan import lan_ip
 from smes.engine import (
     DomainError,
     complete_operation,
@@ -169,6 +170,13 @@ def test_oee_uses_run_time_downtime_and_good_pieces(session):
     assert metrics["performance"] == 1
     assert metrics["availability"] == run_seconds / (run_seconds + 600)
     assert metrics["oee"] == metrics["availability"] * metrics["performance"] * metrics["quality"]
+
+
+def test_lan_address_is_not_loopback():
+    address = lan_ip()
+    if address is None:
+        return
+    assert not address.startswith("127.")
 
 
 def test_sensor_fault_is_cleared_before_the_shift_ends(session):
