@@ -47,6 +47,10 @@ def test_board_starts_with_planned_orders(client):
         "PO-1003",
         "PO-1004",
     ]
+    health = client.get("/api/health")
+    assert health.status_code == 200
+    assert health.json()["status"] == "ok"
+    assert "lan_urls" in health.json()
     assert client.get("/").status_code == 200
     assert "SMES" in client.get("/").text
 

@@ -19,18 +19,23 @@ The sample line builds two control panels, `CP-100` and `CP-200`, across kitting
 
 ## Run it on your LAN
 
-Other people can open the board only when SMES is running on a computer that is on the same Wi-Fi or LAN as they are. `http://127.0.0.1:8000` is that computer alone.
+Other people can open the board only when SMES is running on a PC that is on the same network as they are. Cursor Cloud / `127.0.0.1` cannot be shared to your office LAN.
 
-On Windows, right-click `start-lan.bat` and choose **Run as administrator**. On Linux or macOS:
+1. Unzip `smes-source.zip` on the PC whose IPv4 address you want to share (example: `172.24.88.169`).
+2. On Windows, right-click `start-lan.bat` → **Run as administrator**. Leave the black window open.
+3. The window and the board banner print the share URL, for example `http://172.24.88.169:8000`.
+4. Other users open that URL. They must not use `http://127.0.0.1:8000`.
+
+On Linux or macOS:
 
 ```bash
 chmod +x start-lan.sh
 ./start-lan.sh
 ```
 
-The window prints a line like `Other users on LAN: http://192.168.1.20:8000`. Everyone else on that network opens that address. Leave the window open.
+On the same PC you can still use [http://127.0.0.1:8000](http://127.0.0.1:8000). API docs are at [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs).
 
-On this same computer you can still use [http://127.0.0.1:8000](http://127.0.0.1:8000). API docs are at [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs).
+If other PCs still cannot connect, Windows Firewall or company network isolation is blocking peer access. Run `start-lan.bat` as administrator again, or ask IT to allow TCP 8000 between clients.
 
 ```bash
 pytest

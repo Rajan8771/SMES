@@ -56,7 +56,14 @@ def _run(session: Session, fn):
 
 @router.get("/health")
 def health() -> dict:
-    return {"status": "ok", "service": "smes"}
+    from smes.lan import lan_addresses
+
+    return {
+        "status": "ok",
+        "service": "smes",
+        "this_computer": "http://127.0.0.1:8000",
+        "lan_urls": [f"http://{address}:8000" for address in lan_addresses()],
+    }
 
 
 @router.get("/dashboard")

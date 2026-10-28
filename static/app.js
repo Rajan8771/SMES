@@ -1,6 +1,26 @@
 const notice = document.querySelector("#notice");
 const board = document.querySelector("#board");
+const lan = document.querySelector("#lan");
 let busy = false;
+
+async function showLanBanner() {
+  try {
+    const response = await fetch("/api/health");
+    if (!response.ok) return;
+    const data = await response.json();
+    const urls = data.lan_urls || [];
+    if (!urls.length) {
+      lan.textContent =
+        "LAN: no shared address yet. Run start-lan.bat as Administrator on this PC, then reload.";
+      return;
+    }
+    lan.innerHTML =
+      "<strong>Share with other users on this network:</strong> " +
+      urls.map((url) => escapeHtml(url)).join(" &nbsp;|&nbsp; ");
+  } catch (_error) {
+    lan.textContent = "";
+  }
+}
 
 function escapeHtml(value) {
   return String(value)
@@ -256,4 +276,5 @@ document.body.addEventListener("click", (event) => {
   act(button);
 });
 
+showLanBanner();
 refresh().catch((error) => setNotice(error.message, true));

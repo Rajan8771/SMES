@@ -3,7 +3,7 @@ from datetime import timedelta
 from sqlalchemy import select
 
 from smes.db import utcnow
-from smes.lan import lan_ip
+from smes.lan import lan_addresses, lan_ip
 from smes.engine import (
     DomainError,
     complete_operation,
@@ -173,6 +173,8 @@ def test_oee_uses_run_time_downtime_and_good_pieces(session):
 
 
 def test_lan_address_is_not_loopback():
+    for address in lan_addresses():
+        assert not address.startswith("127.")
     address = lan_ip()
     if address is None:
         return
