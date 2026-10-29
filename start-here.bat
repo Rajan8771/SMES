@@ -77,15 +77,16 @@ if errorlevel 1 (
 
 net session >nul 2>&1
 if not errorlevel 1 (
-  echo Adding firewall rule for port 8000... >> "%LOG%"
+  echo Adding firewall rule for port 8000 on all profiles... >> "%LOG%"
   netsh advfirewall firewall delete rule name="SMES 8000" >nul 2>&1
-  netsh advfirewall firewall add rule name="SMES 8000" dir=in action=allow protocol=TCP localport=8000 >> "%LOG%" 2>&1
+  netsh advfirewall firewall add rule name="SMES 8000" dir=in action=allow protocol=TCP localport=8000 profile=any enable=yes >> "%LOG%" 2>&1
 ) else (
   echo Not admin - firewall rule skipped.>> "%LOG%"
   echo.
   echo WARNING: Not running as Administrator.
-  echo Other PCs may be blocked by Windows Firewall.
+  echo Other PCs will often get ERR_CONNECTION_TIMED_OUT.
   echo Close this, then right-click start-here.bat -^> Run as administrator
+  echo Or run fix-firewall.bat as administrator, then start again.
   echo.
 )
 

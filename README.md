@@ -36,7 +36,14 @@ chmod +x start-lan.sh
 
 On the same PC you can still use [http://127.0.0.1:8000](http://127.0.0.1:8000). API docs are at [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs).
 
-If other PCs still cannot connect, Windows Firewall or company network isolation is blocking peer access. Run `start-lan.bat` as administrator again, or ask IT to allow TCP 8000 between clients.
+If another PC shows `ERR_CONNECTION_TIMED_OUT` to `http://172.24.88.169:8000`:
+
+1. On the host PC, confirm `http://127.0.0.1:8000` works while `start-here.bat` is open.
+2. Run `fix-firewall.bat` as administrator.
+3. On the host PC, confirm `http://172.24.88.169:8000` works.
+4. If the host works but other PCs time out, ask IT to allow inbound TCP 8000 to that PC. Office networks often block peer-to-peer traffic.
+
+Use `diagnose.bat` to capture IP, listener, firewall, and health results into `diagnose-log.txt`.
 
 ```bash
 pytest
