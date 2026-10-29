@@ -1,4 +1,4 @@
-import { shop, ticker } from "../content";
+import { shop, site, ticker } from "../content";
 
 export function Hero() {
   return (
@@ -12,10 +12,10 @@ export function Hero() {
             <i />
             <i />
           </span>
-          {shop.category} · Kasna
+          <span className="handle">{site.name}</span> · Kasna
         </p>
         <h1>
-          <span className="sr-only">{shop.name}. </span>
+          <span className="sr-only">{site.name}. {shop.name}. </span>
           <span className="display">
             Colour,
             <br />
@@ -25,7 +25,7 @@ export function Hero() {
           </span>
         </h1>
         <p className="lede">
-          <strong>{shop.name}</strong> sits on {shop.street}, {shop.region}. Come
+          <strong>{site.name}</strong> is home to <strong>{shop.name}</strong> on {shop.street}, {shop.region}. Come
           for sanitary ware, pipes, bath fittings, door hardware, tools, and the
           mixed mill-store counter.
         </p>

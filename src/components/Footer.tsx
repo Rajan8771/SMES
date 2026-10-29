@@ -1,12 +1,14 @@
-import { shop } from "../content";
+import { shop, site } from "../content";
 
 export function Footer() {
   return (
     <footer className="footer">
       <div className="footer-inner">
         <div>
-          <p className="brand-name">{shop.name}</p>
+          <p className="brand-name">{site.name}</p>
           <p>
+            {shop.name}
+            <br />
             {shop.street}
             <br />
             {shop.region}

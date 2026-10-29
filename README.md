@@ -1,6 +1,6 @@
-# Haryana Sanitary Hardware and Mill Store
+# rj_suman_mes
 
-Colourful 3D website for the hardware and mill store on Surajpur Kasna Road, Sadar, Gautam Buddha Nagar.
+Colourful 3D website for Haryana Sanitary Hardware and Mill Store on Surajpur Kasna Road, Sadar, Gautam Buddha Nagar. The site name is rj_suman_mes.
 
 Public listing used for the page:
 

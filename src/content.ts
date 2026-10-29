@@ -1,3 +1,7 @@
+export const site = {
+  name: "rj_suman_mes",
+};
+
 export const shop = {
   name: "Haryana Sanitary Hardware and Mill Store",
   short: "Haryana Sanitary",
@@ -114,6 +118,7 @@ export function departmentById(focus: Focus): Department | undefined {
 }
 
 export const ticker = [
+  "rj_suman_mes",
   "Haryana Sanitary",
   "Hardware",
   "Mill store",

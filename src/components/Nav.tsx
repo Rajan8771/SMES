@@ -1,4 +1,4 @@
-import { shop } from "../content";
+import { shop, site } from "../content";
 
 export function Nav() {
   return (
@@ -15,7 +15,7 @@ export function Nav() {
           </span>
         </span>
         <span>
-          <span className="brand-name">{shop.short}</span>
+          <span className="brand-name">{site.name}</span>
           <span className="brand-sub">Hardware & Mill Store</span>
         </span>
       </a>

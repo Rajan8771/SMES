@@ -132,6 +132,7 @@ h2 {
   letter-spacing: -0.03em;
   font-size: 18px;
   line-height: 1;
+  white-space: nowrap;
 }
 
 .brand-sub {
@@ -240,6 +241,8 @@ h2 {
 
 .eyebrow { color: #9a3412; }
 .eyebrow.light { color: var(--saffron); }
+
+.handle { text-transform: none; letter-spacing: 0; }
 
 .dots { display: inline-flex; gap: 5px; }
 .dots i {
