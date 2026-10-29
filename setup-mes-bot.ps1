@@ -90,8 +90,22 @@ Invoke-OpenClaw -Exe $openclaw -Arguments @("config", "set", "channels.tt.groups
 Invoke-OpenClaw -Exe $openclaw -Arguments @("config", "set", "channels.tt.groups.$GroupId.requireMention", "false")
 Invoke-OpenClaw -Exe $openclaw -Arguments @("gateway", "restart")
 
+# Every day at 09:00 India time, the bot posts one fixed line in the group.
+Invoke-OpenClaw -Exe $openclaw -Arguments @(
+    "cron", "add",
+    "--name", "MES morning update",
+    "--cron", "0 9 * * *",
+    "--tz", "Asia/Kolkata",
+    "--session", "isolated",
+    "--message", "Send exactly this text and add nothing else: Please update SMT MES issues",
+    "--announce",
+    "--channel", "tt",
+    "--to", $GroupId
+)
+
 Write-Host ""
 Write-Host "MES auto-reply is on for TT group $GroupId."
+Write-Host "The bot will post 'Please update SMT MES issues' every day at 9:00 AM India time."
 Write-Host "In the INDIA SMT MES ISSUE group send: Glue line 17, final VI, CPU not working since 10:00."
 Write-Host "Add real line checks to $Dest\MES.md"
 Write-Host "If the TT log says connection closed code=1008, log out of the robot account on the TT desktop and restart OClaw once."
