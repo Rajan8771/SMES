@@ -1,0 +1,73 @@
+name: MES issue
+description: Report a manufacturing execution problem.
+title: "[MES] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form for a problem in manufacturing execution: a stopped or degraded station, a wrong order or lot state, a quality hold, or missing shop-floor data.
+  - type: input
+    id: site
+    attributes:
+      label: Site
+      description: Plant or site name.
+      placeholder: Plant 1
+    validations:
+      required: true
+  - type: input
+    id: line
+    attributes:
+      label: Line or cell
+      placeholder: SMT line 3
+    validations:
+      required: true
+  - type: input
+    id: station
+    attributes:
+      label: Station or system
+      placeholder: Printer, SPI, placement, or MES screen
+    validations:
+      required: true
+  - type: input
+    id: order
+    attributes:
+      label: Order, lot, or serial
+      description: The identifier operators use to find this work.
+      placeholder: WO-10422
+    validations:
+      required: false
+  - type: dropdown
+    id: impact
+    attributes:
+      label: Impact
+      options:
+        - Line down
+        - Degraded — running with a workaround
+        - Quality hold
+        - Data or tracking gap
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: happened
+    attributes:
+      label: What happened
+      description: What the operator saw, including the time on the shop floor.
+      placeholder: At 14:10 the station rejected the scan and the order stayed in Started.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      placeholder: The scan should move the lot to the next station.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+      description: Error text, transaction ids, or screenshots. Do not paste passwords or access tokens.
+    validations:
+      required: false
