@@ -72,8 +72,16 @@ $job.delivery | Add-Member -NotePropertyName to -NotePropertyValue $GroupId -For
 $job | Add-Member -NotePropertyName wakeMode -NotePropertyValue "now" -Force
 $job | Add-Member -NotePropertyName sessionTarget -NotePropertyValue "isolated" -Force
 if ($job.schedule) {
-    $job.schedule | Add-Member -NotePropertyName expr -NotePropertyValue "0 9 * * *" -Force
+    foreach ($field in @("expr", "cron", "expression")) {
+        if ($job.schedule.PSObject.Properties.Name -contains $field) {
+            $job.schedule.$field = "0 9,21 * * *"
+        }
+    }
+    if (-not ($job.schedule.PSObject.Properties.Name -contains "expr") -and -not ($job.schedule.PSObject.Properties.Name -contains "cron")) {
+        $job.schedule | Add-Member -NotePropertyName expr -NotePropertyValue "0 9,21 * * *"
+    }
     $job.schedule | Add-Member -NotePropertyName tz -NotePropertyValue "Asia/Calcutta" -Force
+    Write-Host "Schedule: $($job.schedule | ConvertTo-Json -Compress)"
 }
 
 if ($wrapped) {
@@ -88,5 +96,6 @@ $json = $out | ConvertTo-Json -Depth 40
 Write-Host "After: channel=tt to=$GroupId"
 
 Start-OpenClawGateway
-Write-Host "MES job fixed. In Cron Jobs, click Run on MES."
+Write-Host "MES job fixed. It posts at 9:00 AM and 9:00 PM India time."
+Write-Host "In Cron Jobs, click Run on MES to send one message now."
 Write-Host "The group should receive: Please update SMT MES issues"

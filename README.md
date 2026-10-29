@@ -15,6 +15,6 @@ powershell -ExecutionPolicy Bypass -File .\setup-mes-bot.ps1
 
 The script copies `workspace\` into `%USERPROFILE%\.openclaw\workspace`, allows that group to receive a reply without an @mention, and restarts the gateway.
 
-`fix-mes-job.ps1` retargets the existing MES cron job so it posts `Please update SMT MES issues` to TT group 965235 every day at 9:00 AM India time.
+`fix-mes-job.ps1` retargets the existing MES cron job so it posts `Please update SMT MES issues` to TT group 965235 every day at 9:00 AM and 9:00 PM India time.
 
 Put real line checks in `workspace\MES.md`, then run the script again. The bot quotes only those checks. It does not invent machine settings.
