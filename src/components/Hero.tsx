@@ -1,4 +1,4 @@
-import { shop, site, ticker } from "../content";
+import { company, site, ticker } from "../content";
 
 export function Hero() {
   return (
@@ -12,32 +12,34 @@ export function Hero() {
             <i />
             <i />
           </span>
-          <span className="handle">{site.name}</span> · Kasna
+          <span className="handle">{site.name}</span> · India
         </p>
         <h1>
-          <span className="sr-only">{site.name}. {shop.name}. </span>
+          <span className="sr-only">
+            {site.name}. {company.spoken}. {company.name}.{" "}
+          </span>
           <span className="display">
             Colour,
             <br />
-            metal &amp;
+            glass &amp;
             <br />
-            <span className="pop">mill store.</span>
+            <span className="pop">signal.</span>
           </span>
         </h1>
         <p className="lede">
-          <strong>{site.name}</strong> is home to <strong>{shop.name}</strong> on {shop.street}, {shop.region}. Come
-          for sanitary ware, pipes, bath fittings, door hardware, tools, and the
-          mixed mill-store counter.
+          <strong>{site.name}</strong> for <strong>{company.spoken}</strong> —{" "}
+          {company.name}, the company behind OPPO phones in India. Registered
+          office: {company.floor}, {company.street}, {company.region}.
         </p>
         <div className="cta-row">
-          <a className="btn" href={`tel:${shop.phoneTel}`}>
-            Call the counter
+          <a className="btn" href={company.site} target="_blank" rel="noreferrer">
+            oppo.com/in
           </a>
-          <a className="btn btn-cyan" href={shop.maps} target="_blank" rel="noreferrer">
-            Get directions
+          <a className="btn btn-cyan" href={`tel:${company.phoneTel}`}>
+            Call the office
           </a>
           <a className="text-link" href="#departments">
-            See the counters
+            See the lineup
           </a>
         </div>
       </div>

@@ -2,28 +2,28 @@ export const site = {
   name: "rj_suman_mes",
 };
 
-export const shop = {
-  name: "Haryana Sanitary Hardware and Mill Store",
-  short: "Haryana Sanitary",
-  category: "Hardware store",
-  street: "Surajpur Kasna Road, Sadar",
-  region: "Kasna, Greater Noida, Gautam Buddha Nagar, Uttar Pradesh",
-  phoneDisplay: "086600 82752",
-  phoneTel: "+918660082752",
-  maps: "https://www.google.com/maps/search/?api=1&query=Haryana+Sanitary+Hardware+and+Mill+store+Surajpur+Kasna+Road+Sadar",
+export const company = {
+  name: "OPPO Mobiles India Private Limited",
+  spoken: "OPPO Mobile India Pvt Ltd",
+  short: "OPPO Mobile India",
+  cin: "U74140HR2013PTC069892",
+  floor: "5th Floor, Tower B, Building No. 8",
+  street: "DLF Cyber City",
+  region: "Gurugram, Haryana 122002",
+  phoneDisplay: "0124 472 7700",
+  phoneTel: "+911244727700",
+  careDisplay: "1800 103 2777",
+  careTel: "18001032777",
+  email: "infoindia@oppo.com",
+  site: "https://www.oppo.com/in",
+  maps: "https://www.google.com/maps/search/?api=1&query=OPPO+Mobiles+India+Private+Limited+DLF+Cyber+City+Gurugram",
   mapEmbed:
-    "https://maps.google.com/maps?q=Haryana%20Sanitary%20Hardware%20and%20Mill%20Store%20Surajpur%20Kasna%20Road%20Sadar&z=16&output=embed",
+    "https://maps.google.com/maps?q=28.495019,77.089281&z=16&output=embed",
 };
 
-export type DepartmentId =
-  | "sanitary"
-  | "pipes"
-  | "fittings"
-  | "hardware"
-  | "tools"
-  | "mill";
+export type DepartmentId = "find" | "reno" | "a" | "enco" | "camera" | "care";
 
-export type ModelId = "sanitary" | "pipes" | "hardware" | "mill";
+export type ModelId = "phones" | "audio" | "camera" | "care";
 
 export type Focus = "all" | DepartmentId;
 
@@ -40,68 +40,68 @@ export type Department = {
 
 export const departments: Department[] = [
   {
-    id: "sanitary",
-    model: "sanitary",
-    title: "Sanitary ware",
-    kicker: "Basins & pans",
-    blurb: "Chinaware for a new bathroom or a straight replacement.",
+    id: "find",
+    model: "phones",
+    title: "Find",
+    kicker: "Flagship phones",
+    blurb: "The Find line, OPPO’s top slab of glass and metal.",
     detail:
-      "Basins, pans, and seat covers — the ceramic side of the counter. Ask which sizes are on the floor today.",
-    swatch: "#49d2ff",
-    ink: "#042433",
+      "Find is the flagship family. Live specs and prices sit on oppo.com/in — this page only shows the shape.",
+    swatch: "#1bd176",
+    ink: "#042414",
   },
   {
-    id: "pipes",
-    model: "pipes",
-    title: "Pipes & lines",
-    kicker: "Runs & joints",
-    blurb: "Lines, elbows, and the pieces that join them.",
+    id: "reno",
+    model: "phones",
+    title: "Reno",
+    kicker: "Portrait line",
+    blurb: "Reno phones, the portrait series OPPO sells in India.",
     detail:
-      "Bring the old fitting if you can. Matching a thread at the counter is faster than describing it over the phone.",
-    swatch: "#ff5a1f",
-    ink: "#2a0c00",
-  },
-  {
-    id: "fittings",
-    model: "sanitary",
-    title: "Bath fittings",
-    kicker: "Taps & mixers",
-    blurb: "The metal you actually touch: taps, showers, and connectors.",
-    detail:
-      "Faucets and bath fittings sit with the sanitary ware. Finishes change with what the counter has in.",
+      "Reno is the portrait line. Open the official store for the model that is on sale this month.",
     swatch: "#ff4f9a",
     ink: "#2a0016",
   },
   {
-    id: "hardware",
-    model: "hardware",
-    title: "Door hardware",
-    kicker: "Locks & hinges",
-    blurb: "Locks, hinges, tower bolts, and handles.",
+    id: "a",
+    model: "phones",
+    title: "A series",
+    kicker: "Everyday phones",
+    blurb: "A-series phones for a daily pocket.",
     detail:
-      "Door and window hardware for a house still being finished, or a hinge that has given up.",
+      "The A series is the everyday range. Colours and storage change by model — check oppo.com/in before you buy.",
+    swatch: "#49d2ff",
+    ink: "#042433",
+  },
+  {
+    id: "enco",
+    model: "audio",
+    title: "Enco",
+    kicker: "Audio",
+    blurb: "Enco buds and neckbands that pair with an OPPO phone.",
+    detail:
+      "Enco is OPPO’s audio family. The sculpture is a case and a pair of buds, not a stock list.",
     swatch: "#ffd23f",
     ink: "#2a2100",
   },
   {
-    id: "tools",
-    model: "hardware",
-    title: "Tools & fasteners",
-    kicker: "The small parts",
-    blurb: "Hand tools, screws, anchors, and the bits that vanish mid-job.",
+    id: "camera",
+    model: "camera",
+    title: "Camera",
+    kicker: "The lens stack",
+    blurb: "The camera island OPPO puts on the back of the phone.",
     detail:
-      "Fasteners and hand tools. If the job is stuck on one odd size, call before you cross Kasna.",
-    swatch: "#8dff63",
-    ink: "#062406",
+      "Imaging is the raised camera island. Sensor names and zoom figures belong on the official product page.",
+    swatch: "#ff5a1f",
+    ink: "#2a0c00",
   },
   {
-    id: "mill",
-    model: "mill",
-    title: "Mill-store mix",
-    kicker: "The long counter",
-    blurb: "Repair stock and the everyday odds and ends a mill store keeps in reach.",
+    id: "care",
+    model: "care",
+    title: "Care",
+    kicker: "Service",
+    blurb: "Support for a phone you already own.",
     detail:
-      "The board says mill store as well as hardware. That counter is the mixed one. Call and ask for the material by name.",
+      "Customer care is 1800 103 2777. The registered office phone is 0124 472 7700, and mail goes to infoindia@oppo.com.",
     swatch: "#c9a6ff",
     ink: "#1a0a33",
   },
@@ -119,14 +119,11 @@ export function departmentById(focus: Focus): Department | undefined {
 
 export const ticker = [
   "rj_suman_mes",
-  "Haryana Sanitary",
-  "Hardware",
-  "Mill store",
-  "Pipes",
-  "Fittings",
-  "Taps",
-  "Tools",
-  "Kasna",
-  "Surajpur Kasna Road",
-  "Sadar",
+  "OPPO Mobile India",
+  "Find",
+  "Reno",
+  "A series",
+  "Enco",
+  "Gurugram",
+  "DLF Cyber City",
 ];

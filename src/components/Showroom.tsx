@@ -8,10 +8,10 @@ export function Showroom({
   onFocus: (focus: Focus) => void;
 }) {
   const dept = departmentById(focus);
-  const heading = dept ? dept.title : "The whole counter, spinning.";
+  const heading = dept ? dept.title : "The whole lineup, spinning.";
   const copy = dept
     ? dept.detail
-    : "Sanitary ware, pipe, door hardware, and the mill-store mix share one sculpture. Move the cursor and the counter turns with you.";
+    : "Find, Reno, the A series, Enco, and the camera island share one sculpture. Move the cursor and it turns with you.";
 
   return (
     <section className="showroom" id="showroom">

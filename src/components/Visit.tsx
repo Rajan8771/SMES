@@ -1,53 +1,71 @@
-import { shop } from "../content";
+import { company, site } from "../content";
 
 export function Visit() {
   return (
     <section className="visit" id="visit">
       <div className="visit-inner">
         <div className="enamel-sign">
-          <span>Kasna counter</span>
-          <strong>Come by the road.</strong>
+          <span>{site.name}</span>
+          <strong>Gurugram office.</strong>
         </div>
         <div className="visit-grid">
           <article className="address-card">
-            <p className="eyebrow">The shop</p>
-            <h2>{shop.name}</h2>
+            <p className="eyebrow">Registered office</p>
+            <h2>{company.spoken}</h2>
             <dl>
               <div>
-                <dt>Listed as</dt>
-                <dd>{shop.category}</dd>
+                <dt>Legal name</dt>
+                <dd>{company.name}</dd>
+              </div>
+              <div>
+                <dt>CIN</dt>
+                <dd>{company.cin}</dd>
               </div>
               <div>
                 <dt>Address</dt>
                 <dd>
-                  {shop.street}
+                  {company.floor}
                   <br />
-                  {shop.region}
+                  {company.street}
+                  <br />
+                  {company.region}
                 </dd>
               </div>
               <div>
-                <dt>Phone</dt>
+                <dt>Office</dt>
                 <dd>
-                  <a href={`tel:${shop.phoneTel}`}>{shop.phoneDisplay}</a>
+                  <a href={`tel:${company.phoneTel}`}>{company.phoneDisplay}</a>
+                </dd>
+              </div>
+              <div>
+                <dt>Customer care</dt>
+                <dd>
+                  <a href={`tel:${company.careTel}`}>{company.careDisplay}</a>
+                </dd>
+              </div>
+              <div>
+                <dt>Email</dt>
+                <dd>
+                  <a href={`mailto:${company.email}`}>{company.email}</a>
                 </dd>
               </div>
             </dl>
             <p className="fine">
-              Hours are not on the public listing. Call the counter before a special trip, and ask for the material by name.
+              Page by {site.name}. Phones, prices, and service bookings are on the official OPPO India site.
             </p>
             <div className="cta-row">
-              <a className="btn" href={`tel:${shop.phoneTel}`}>
-                Call {shop.phoneDisplay}
+              <a className="btn" href={company.site} target="_blank" rel="noreferrer">
+                oppo.com/in
               </a>
-              <a className="btn btn-cyan" href={shop.maps} target="_blank" rel="noreferrer">
+              <a className="btn btn-cyan" href={company.maps} target="_blank" rel="noreferrer">
                 Directions
               </a>
             </div>
           </article>
           <div className="map-frame">
             <iframe
-              title="Map of Haryana Sanitary Hardware and Mill Store on Surajpur Kasna Road"
-              src={shop.mapEmbed}
+              title="Map of OPPO Mobiles India Private Limited at DLF Cyber City, Gurugram"
+              src={company.mapEmbed}
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
             />

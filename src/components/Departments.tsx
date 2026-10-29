@@ -11,11 +11,11 @@ export function Departments({
     <section className="sheet" id="departments">
       <div className="sheet-inner">
         <header className="sheet-head">
-          <p className="eyebrow">Six ways in</p>
-          <h2>Pick a counter.</h2>
+          <p className="eyebrow">Six families</p>
+          <h2>Pick a line.</h2>
           <p>
             The sculpture in the showroom rebuilds around the family you choose.
-            Shelf stock changes by the day — these are the counters to ask for.
+            Model names and prices stay on oppo.com/in.
           </p>
         </header>
         <div className="ring-wrap">
@@ -41,7 +41,7 @@ export function Departments({
             ))}
           </div>
         </div>
-        <p className="ring-hint">Choose a counter. The showroom sculpture rebuilds around it.</p>
+        <p className="ring-hint">Choose a line. The showroom sculpture rebuilds around it.</p>
       </div>
     </section>
   );

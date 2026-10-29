@@ -1,12 +1,15 @@
 # rj_suman_mes
 
-Colourful 3D website for Haryana Sanitary Hardware and Mill Store on Surajpur Kasna Road, Sadar, Gautam Buddha Nagar. The site name is rj_suman_mes.
+Colourful 3D page by rj_suman_mes for OPPO Mobile India Pvt Ltd (OPPO Mobiles India Private Limited).
 
-Public listing used for the page:
+Public company details used on the page:
 
-- Hardware store
-- Surajpur Kasna Road, Sadar, Uttar Pradesh
-- 086600 82752
+- Registered office: 5th Floor, Tower B, Building No. 8, DLF Cyber City, Gurugram, Haryana 122002
+- CIN: U74140HR2013PTC069892
+- Office: 0124 472 7700
+- Customer care: 1800 103 2777
+- Email: infoindia@oppo.com
+- Official site: https://www.oppo.com/in
 
 ## Run
 

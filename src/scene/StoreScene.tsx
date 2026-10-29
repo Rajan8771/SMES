@@ -5,10 +5,10 @@ import * as THREE from "three";
 import { modelFor, type Focus, type ModelId } from "../content";
 
 const HOMES: Record<ModelId, [number, number, number]> = {
-  sanitary: [1.05, 0.28, 0.4],
-  pipes: [2.85, 0.42, -0.05],
-  hardware: [2.05, -0.12, 0.9],
-  mill: [1.85, 1.28, -0.7],
+  phones: [1.05, 0.2, 0.35],
+  audio: [2.75, 0.15, 0.1],
+  camera: [2.05, -0.15, 1.0],
+  care: [1.7, 1.15, -0.55],
 };
 
 function Paint({
@@ -31,139 +31,93 @@ function Paint({
   );
 }
 
-function Gear({ color, spin = 0.4 }: { color: string; spin?: number }) {
-  const ref = useRef<THREE.Group>(null);
-  useFrame((state) => {
-    if (ref.current) ref.current.rotation.z = state.clock.elapsedTime * spin;
-  });
+function Handset({
+  color,
+  position,
+  rotation,
+}: {
+  color: string;
+  position: [number, number, number];
+  rotation: [number, number, number];
+}) {
   return (
-    <group ref={ref}>
-      <mesh>
-        <torusGeometry args={[0.62, 0.13, 18, 48]} />
-        <Paint color={color} metalness={0.58} roughness={0.26} />
+    <group position={position} rotation={rotation}>
+      <RoundedBox args={[0.7, 1.42, 0.08]} radius={0.1} smoothness={5}>
+        <Paint color={color} metalness={0.42} roughness={0.18} />
+      </RoundedBox>
+      <RoundedBox args={[0.58, 1.24, 0.015]} radius={0.05} position={[0, 0, 0.048]}>
+        <Paint color="#120814" metalness={0.15} roughness={0.12} />
+      </RoundedBox>
+      <RoundedBox args={[0.22, 0.08, 0.02]} radius={0.02} position={[0.16, 0.5, 0.06]}>
+        <Paint color="#2a2418" metalness={0.7} roughness={0.25} />
+      </RoundedBox>
+      <mesh position={[0.12, 0.5, 0.075]} rotation={[Math.PI / 2, 0, 0]}>
+        <cylinderGeometry args={[0.028, 0.028, 0.02, 16]} />
+        <Paint color="#49d2ff" metalness={0.3} roughness={0.1} />
       </mesh>
-      <mesh rotation={[Math.PI / 2, 0, 0]}>
-        <cylinderGeometry args={[0.2, 0.2, 0.18, 24]} />
-        <Paint color="#fff6ea" metalness={0.35} roughness={0.3} />
-      </mesh>
-      {Array.from({ length: 12 }, (_, index) => {
-        const angle = (index / 12) * Math.PI * 2;
-        return (
-          <mesh
-            key={index}
-            position={[Math.cos(angle) * 0.78, Math.sin(angle) * 0.78, 0]}
-            rotation={[0, 0, angle]}
-          >
-            <boxGeometry args={[0.16, 0.22, 0.14]} />
-            <Paint color={color} metalness={0.58} roughness={0.26} />
-          </mesh>
-        );
-      })}
     </group>
   );
 }
 
-function Sanitary() {
+function Phones() {
   return (
     <group>
-      <RoundedBox args={[1.45, 0.16, 0.9]} radius={0.05} position={[0, -0.22, 0]}>
-        <Paint color="#f7fdff" roughness={0.16} metalness={0.05} />
+      <Handset color="#1bd176" position={[-0.15, 0.05, 0]} rotation={[0.08, -0.45, 0.12]} />
+      <Handset color="#ff4f9a" position={[0.55, -0.05, 0.25]} rotation={[0.05, -0.2, -0.18]} />
+      <Handset color="#49d2ff" position={[0.15, 0.2, -0.35]} rotation={[-0.1, 0.35, 0.22]} />
+    </group>
+  );
+}
+
+function Audio() {
+  return (
+    <group>
+      <RoundedBox args={[0.72, 0.28, 0.95]} radius={0.12} position={[0, -0.1, 0]}>
+        <Paint color="#ffd23f" metalness={0.35} roughness={0.22} />
       </RoundedBox>
-      <RoundedBox args={[0.95, 0.34, 0.6]} radius={0.12} position={[0, 0.04, 0]}>
-        <Paint color="#67e4ff" roughness={0.14} metalness={0.08} />
-      </RoundedBox>
-      <mesh position={[0, 0.16, 0.02]} scale={[1, 0.42, 0.7]}>
-        <sphereGeometry args={[0.3, 28, 18]} />
-        <Paint color="#e7fbff" roughness={0.12} metalness={0.04} />
-      </mesh>
-      <group position={[0.32, 0.32, 0.2]}>
+      <group position={[-0.42, 0.35, 0.15]} rotation={[0.4, 0.2, 0.6]}>
         <mesh>
-          <cylinderGeometry args={[0.032, 0.04, 0.3, 16]} />
-          <Paint color="#d5deea" metalness={0.82} roughness={0.18} />
+          <sphereGeometry args={[0.16, 24, 24]} />
+          <Paint color="#fff6ea" metalness={0.55} roughness={0.2} />
         </mesh>
-        <mesh position={[0.13, 0.13, 0]} rotation={[0, 0, Math.PI / 2]}>
-          <cylinderGeometry args={[0.028, 0.028, 0.24, 16]} />
-          <Paint color="#d5deea" metalness={0.82} roughness={0.18} />
-        </mesh>
-        <mesh position={[0.24, 0.05, 0]}>
-          <cylinderGeometry args={[0.024, 0.018, 0.14, 12]} />
-          <Paint color="#d5deea" metalness={0.82} roughness={0.18} />
-        </mesh>
-        <mesh position={[-0.12, 0.14, 0]}>
-          <sphereGeometry args={[0.048, 18, 18]} />
-          <Paint color="#ffd23f" metalness={0.7} roughness={0.2} />
+        <mesh position={[0, -0.22, 0]}>
+          <cylinderGeometry args={[0.045, 0.06, 0.28, 16]} />
+          <Paint color="#1bd176" metalness={0.4} roughness={0.2} />
         </mesh>
       </group>
-      <mesh position={[-0.62, 0.0, 0.34]}>
-        <cylinderGeometry args={[0.08, 0.09, 0.22, 18]} />
-        <Paint color="#ff4f9a" roughness={0.32} metalness={0.12} />
-      </mesh>
+      <group position={[0.48, 0.42, -0.1]} rotation={[0.5, -0.3, -0.5]}>
+        <mesh>
+          <sphereGeometry args={[0.16, 24, 24]} />
+          <Paint color="#fff6ea" metalness={0.55} roughness={0.2} />
+        </mesh>
+        <mesh position={[0, -0.22, 0]}>
+          <cylinderGeometry args={[0.045, 0.06, 0.28, 16]} />
+          <Paint color="#ff4f9a" metalness={0.4} roughness={0.2} />
+        </mesh>
+      </group>
     </group>
   );
 }
 
-function Pipes() {
-  const colors = ["#ff5a1f", "#2f6bff", "#8dff63", "#fff6ea", "#ffd23f"];
+function Camera() {
   return (
-    <group>
-      {colors.map((color, index) => (
-        <mesh
-          key={color}
-          position={[0, (index - 2) * 0.2, 0]}
-          rotation={[0, 0, Math.PI / 2]}
-        >
-          <cylinderGeometry args={[0.078, 0.078, 1.5, 20]} />
-          <Paint color={color} metalness={0.22} roughness={0.22} />
-        </mesh>
-      ))}
-      <mesh position={[0.1, 0.2, 0.48]} rotation={[0.7, 0.2, 0.5]}>
-        <torusGeometry args={[0.4, 0.075, 16, 40]} />
-        <Paint color="#ff4f9a" metalness={0.3} />
-      </mesh>
-      <mesh position={[-0.15, -0.2, 0.55]} rotation={[1.1, 0.4, 0.2]}>
-        <torusGeometry args={[0.3, 0.065, 14, 28, Math.PI]} />
-        <Paint color="#49d2ff" metalness={0.25} />
-      </mesh>
-    </group>
-  );
-}
-
-const BOLTS: Array<[number, number, number]> = [
-  [-0.62, 0.48, 0.32],
-  [-0.32, 0.62, 0.12],
-  [0.42, 0.58, 0.42],
-];
-
-function Hardware() {
-  return (
-    <group>
-      <RoundedBox args={[1.05, 0.28, 0.74]} radius={0.05} position={[0, -0.18, 0]}>
-        <Paint color="#e1062a" metalness={0.38} roughness={0.28} />
+    <group rotation={[0.4, 0.5, 0.1]}>
+      <RoundedBox args={[0.95, 0.95, 0.18]} radius={0.12} position={[0, 0, 0]}>
+        <Paint color="#1a1024" metalness={0.55} roughness={0.28} />
       </RoundedBox>
-      <RoundedBox args={[0.82, 0.24, 0.58]} radius={0.05} position={[0.06, 0.1, 0.02]}>
-        <Paint color="#ffd23f" metalness={0.42} roughness={0.26} />
-      </RoundedBox>
-      <RoundedBox args={[0.58, 0.2, 0.42]} radius={0.04} position={[-0.04, 0.32, 0]}>
-        <Paint color="#d5dee8" metalness={0.72} roughness={0.2} />
-      </RoundedBox>
-      <group position={[0.78, 0.12, 0.38]}>
-        <RoundedBox args={[0.3, 0.26, 0.16]} radius={0.04}>
-          <Paint color="#24142b" metalness={0.5} roughness={0.35} />
-        </RoundedBox>
-        <mesh position={[0, 0.14, 0]} rotation={[Math.PI, 0, 0]}>
-          <torusGeometry args={[0.1, 0.028, 12, 18, Math.PI]} />
-          <Paint color="#e6b84d" metalness={0.78} roughness={0.22} />
-        </mesh>
-      </group>
-      {BOLTS.map((position, index) => (
-        <group key={position.join()} position={position} rotation={[0.3, 0.2, index * 0.4]}>
+      {[
+        [-0.22, 0.22, "#49d2ff"],
+        [0.22, 0.22, "#ffd23f"],
+        [-0.22, -0.22, "#ff4f9a"],
+      ].map(([x, y, color]) => (
+        <group key={`${x}-${y}`} position={[Number(x), Number(y), 0.12]}>
           <mesh>
-            <cylinderGeometry args={[0.038, 0.038, 0.24, 12]} />
-            <Paint color="#e6b84d" metalness={0.78} roughness={0.24} />
+            <cylinderGeometry args={[0.16, 0.16, 0.08, 28]} />
+            <Paint color="#0c0c12" metalness={0.8} roughness={0.15} />
           </mesh>
-          <mesh position={[0, 0.14, 0]}>
-            <sphereGeometry args={[0.058, 16, 16]} />
-            <Paint color="#e6b84d" metalness={0.78} roughness={0.24} />
+          <mesh position={[0, 0.05, 0]}>
+            <cylinderGeometry args={[0.09, 0.09, 0.03, 24]} />
+            <Paint color={String(color)} metalness={0.25} roughness={0.12} />
           </mesh>
         </group>
       ))}
@@ -171,32 +125,36 @@ function Hardware() {
   );
 }
 
-function Mill() {
+function Care() {
+  const ring = useRef<THREE.Group>(null);
+  useFrame((state) => {
+    if (ring.current) ring.current.rotation.z = state.clock.elapsedTime * 0.6;
+  });
   return (
     <group>
-      <group position={[-0.2, 0.05, 0]} rotation={[0.5, 0.45, 0.15]}>
-        <Gear color="#ffb000" spin={0.45} />
-      </group>
-      <group position={[0.95, -0.4, 0.2]} rotation={[0.55, -0.2, 0.5]} scale={0.62}>
-        <Gear color="#ff4f9a" spin={-0.75} />
-      </group>
-      <mesh position={[0.25, -0.62, 0.4]} rotation={[0, 0, Math.PI / 2]}>
-        <cylinderGeometry args={[0.16, 0.16, 1.15, 24]} />
-        <Paint color="#49d2ff" metalness={0.48} roughness={0.22} />
+      <mesh rotation={[Math.PI / 2, 0, 0]}>
+        <cylinderGeometry args={[0.55, 0.55, 0.1, 40]} />
+        <Paint color="#c9a6ff" metalness={0.35} roughness={0.22} />
       </mesh>
-      <mesh position={[-0.85, 0.5, 0.15]} rotation={[0.2, 0.3, 0.4]}>
-        <coneGeometry args={[0.34, 0.5, 22]} />
-        <Paint color="#ff5a1f" metalness={0.32} />
+      <mesh position={[0, 0.08, 0]} rotation={[Math.PI / 2, 0, 0]}>
+        <cylinderGeometry args={[0.16, 0.16, 0.06, 24]} />
+        <Paint color="#1bd176" metalness={0.5} roughness={0.2} />
       </mesh>
+      <group ref={ring} rotation={[Math.PI / 2.4, 0.2, 0]}>
+        <mesh>
+          <torusGeometry args={[0.85, 0.045, 12, 40]} />
+          <Paint color="#ff5a1f" metalness={0.3} roughness={0.25} />
+        </mesh>
+      </group>
     </group>
   );
 }
 
 const MODELS: Record<ModelId, () => ReactNode> = {
-  sanitary: Sanitary,
-  pipes: Pipes,
-  hardware: Hardware,
-  mill: Mill,
+  phones: Phones,
+  audio: Audio,
+  camera: Camera,
+  care: Care,
 };
 
 function Cluster({

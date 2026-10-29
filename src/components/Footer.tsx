@@ -1,4 +1,4 @@
-import { shop, site } from "../content";
+import { company, site } from "../content";
 
 export function Footer() {
   return (
@@ -7,17 +7,17 @@ export function Footer() {
         <div>
           <p className="brand-name">{site.name}</p>
           <p>
-            {shop.name}
+            {company.name}
             <br />
-            {shop.street}
+            {company.floor}, {company.street}
             <br />
-            {shop.region}
+            {company.region}
           </p>
         </div>
         <div>
-          <a href={`tel:${shop.phoneTel}`}>{shop.phoneDisplay}</a>
-          <a href={shop.maps} target="_blank" rel="noreferrer">
-            Open in Google Maps
+          <a href={`tel:${company.phoneTel}`}>{company.phoneDisplay}</a>
+          <a href={company.site} target="_blank" rel="noreferrer">
+            oppo.com/in
           </a>
         </div>
       </div>
