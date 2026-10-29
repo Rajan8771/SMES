@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SMES · Line A</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <header class="top">
+      <div class="brand">
+        <span class="mark" aria-hidden="true">L3</span>
+        <div>
+          <p class="eyebrow">Manufacturing execution</p>
+          <h1>SMES <span>Line A · Control panels</span></h1>
+        </div>
+      </div>
+      <div class="actions">
+        <button type="button" data-action="release-all">Release planned</button>
+        <button type="button" data-action="simulate" class="primary">Run shift</button>
+        <button type="button" data-action="refresh">Refresh</button>
+        <button type="button" data-action="reset" class="ghost">Reset line</button>
+      </div>
+    </header>
+    <p id="lan" class="lan" role="note"></p>
+    <p id="notice" class="notice" role="status"></p>
+    <main id="board" class="board">
+      <p class="loading">Loading the line…</p>
+    </main>
+    <script src="/static/app.js"></script>
+  </body>
+</html>

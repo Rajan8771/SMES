@@ -1,0 +1,44 @@
+SMES - fix "took too long to respond" / ERR_CONNECTION_TIMED_OUT
+================================================================
+
+Your screenshot for http://172.24.88.169:8000 means:
+  packets never reached the SMES PC.
+This is different from "refused" (server off). Timeout = firewall or company network block.
+
+Do these steps ON THE HOST PC (the one whose IP is 172.24.88.169)
+------------------------------------------------------------------
+1. Unzip the latest smes-source.zip.
+
+2. Right-click start-here.bat -> Run as administrator
+   Leave the black window OPEN.
+
+3. On that SAME PC, open Chrome:
+   http://127.0.0.1:8000
+   - If this fails: SMES is not running. Read start-log.txt.
+   - If this works: continue.
+
+4. Still on that SAME PC, open:
+   http://172.24.88.169:8000
+   - If this fails: run fix-firewall.bat as administrator, then retry.
+   - If this works: the server and this PC are fine.
+
+5. From the OTHER PC / phone, open:
+   http://172.24.88.169:8000
+
+If step 4 works but step 5 times out
+------------------------------------
+Windows Firewall is already open, but your company network is blocking
+PC-to-PC traffic (common on office LANs like 172.24.x.x).
+
+Ask IT to allow inbound TCP port 8000 to 172.24.88.169,
+or run SMES on a shared server that other users can already reach.
+
+Quick tools
+-----------
+diagnose.bat      shows IPs, port 8000, firewall, and local health checks
+fix-firewall.bat  opens TCP 8000 for Domain/Private/Public (Run as admin)
+check-port.bat    quick check if anything listens on 8000
+
+Other users must NEVER use http://127.0.0.1:8000
+Only the host PC uses 127.0.0.1. Everyone else uses http://172.24.88.169:8000
+while start-here.bat stays open.
