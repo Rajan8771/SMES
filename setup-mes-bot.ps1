@@ -90,18 +90,11 @@ Invoke-OpenClaw -Exe $openclaw -Arguments @("config", "set", "channels.tt.groups
 Invoke-OpenClaw -Exe $openclaw -Arguments @("config", "set", "channels.tt.groups.$GroupId.requireMention", "false")
 Invoke-OpenClaw -Exe $openclaw -Arguments @("gateway", "restart")
 
-# Every day at 09:00 India time, the bot posts one fixed line in the group.
-Invoke-OpenClaw -Exe $openclaw -Arguments @(
-    "cron", "add",
-    "--name", "MES morning update",
-    "--cron", "0 9 * * *",
-    "--tz", "Asia/Kolkata",
-    "--session", "isolated",
-    "--message", "Send exactly this text and add nothing else: Please update SMT MES issues",
-    "--announce",
-    "--channel", "tt",
-    "--to", $GroupId
-)
+$fixScript = Join-Path $Root "fix-mes-job.ps1"
+if (Test-Path $fixScript) {
+    & powershell -ExecutionPolicy Bypass -File $fixScript
+    if ($LASTEXITCODE -ne 0) { throw "MES job fix failed" }
+}
 
 Write-Host ""
 Write-Host "MES auto-reply is on for TT group $GroupId."
