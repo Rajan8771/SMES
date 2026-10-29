@@ -21,10 +21,11 @@ The sample line builds two control panels, `CP-100` and `CP-200`, across kitting
 
 Other people can open the board only when SMES is running on a PC that is on the same network as they are. Cursor Cloud / `127.0.0.1` cannot be shared to your office LAN.
 
-1. Unzip `smes-source.zip` on the PC whose IPv4 address you want to share (example: `172.24.88.169`).
-2. On Windows, right-click `start-lan.bat` → **Run as administrator**. Leave the black window open.
-3. The window and the board banner print the share URL, for example `http://172.24.88.169:8000`.
-4. Other users open that URL. They must not use `http://127.0.0.1:8000`.
+1. Read `OPEN-ME-FIRST.txt`.
+2. Unzip `smes-source.zip` on the PC whose IPv4 address you want to share (example: `172.24.88.169`).
+3. On Windows, right-click `start-here.bat` → **Run as administrator**. Leave the black window open.
+4. On that same PC, Chrome should open `http://127.0.0.1:8000`. If it refuses, run `check-port.bat` and read `start-log.txt`.
+5. Other users open `http://172.24.88.169:8000` (or the LAN URL printed in the window). They must not use `http://127.0.0.1:8000`.
 
 On Linux or macOS:
 
