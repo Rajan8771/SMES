@@ -1,0 +1,62 @@
+name: MES tracking
+description: Track an order, lot, hold, or corrective action.
+title: "[Track] "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form when the work is follow-up rather than a new failure: an order to watch, a hold to clear, or a corrective action to confirm.
+  - type: input
+    id: item
+    attributes:
+      label: What is being tracked
+      placeholder: Lot L-8831 hold at SPI
+    validations:
+      required: true
+  - type: input
+    id: site
+    attributes:
+      label: Site and line
+      placeholder: Plant 1 / SMT line 3
+    validations:
+      required: true
+  - type: input
+    id: order
+    attributes:
+      label: Order, lot, or serial
+    validations:
+      required: true
+  - type: input
+    id: owner
+    attributes:
+      label: Owner
+      description: Person accountable for the next update.
+    validations:
+      required: true
+  - type: dropdown
+    id: status
+    attributes:
+      label: Status
+      options:
+        - Open
+        - In process
+        - Blocked
+        - Ready to close
+    validations:
+      required: true
+  - type: textarea
+    id: next
+    attributes:
+      label: Next check
+      description: What must happen next, and when it should be confirmed.
+      placeholder: Confirm the hold is released before the 18:00 shift change.
+    validations:
+      required: true
+  - type: textarea
+    id: links
+    attributes:
+      label: Related issues
+      description: Paste links to the MES issue or earlier tracking issues.
+    validations:
+      required: false

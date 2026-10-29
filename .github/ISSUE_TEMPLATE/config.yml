@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: MES issue
+    url: https://github.com/Rajan8771/SMES/issues/new?template=mes-issue.yml
+    about: Report a manufacturing execution problem on a line, station, or order.
+  - name: MES tracking
+    url: https://github.com/Rajan8771/SMES/issues/new?template=mes-tracking.yml
+    about: Open a follow-up to track an order, lot, hold, or corrective action.
