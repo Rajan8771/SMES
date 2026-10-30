@@ -96,9 +96,20 @@ if (Test-Path $fixScript) {
     if ($LASTEXITCODE -ne 0) { throw "MES job fix failed" }
 }
 
+$robotScript = Join-Path $Root "fix-mes-robot-sender.ps1"
+if (Test-Path $robotScript) {
+    Write-Host ""
+    Write-Host "Checking that cron announce will send as the robot (not personal TT)..."
+    & powershell -ExecutionPolicy Bypass -File $robotScript
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "Robot-sender check reported a problem. Read the steps above, then re-run fix-mes-robot-sender.ps1."
+    }
+}
+
 Write-Host ""
 Write-Host "MES auto-reply is on for TT group $GroupId."
 Write-Host "The bot will post 'Please update SMT MES issues' every day at 9:00 AM India time."
 Write-Host "In the INDIA SMT MES ISSUE group send: Glue line 17, final VI, CPU not working since 10:00."
 Write-Host "Add real line checks to $Dest\MES.md"
+Write-Host "If the 09:00 reminder shows as YOUR green bubble, TT is logged in as personal — run fix-mes-robot-sender.ps1."
 Write-Host "If the TT log says connection closed code=1008, log out of the robot account on the TT desktop and restart OClaw once."

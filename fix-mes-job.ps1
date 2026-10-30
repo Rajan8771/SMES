@@ -99,3 +99,8 @@ Start-OpenClawGateway
 Write-Host "MES job fixed. It posts at 9:00 AM and 9:00 PM India time."
 Write-Host "In Cron Jobs, click Run on MES to send one message now."
 Write-Host "The group should receive: Please update SMT MES issues"
+Write-Host ""
+Write-Host "IMPORTANT — who sends it:"
+Write-Host "Cron announce uses the logged-in TT/Feishu account. If OClaw TT is your personal"
+Write-Host "login (e.g. IN908771), the group shows YOUR green bubble, not RAJAN SUMAN的小龙虾."
+Write-Host "Run fix-mes-robot-sender.ps1 to check status and switch to the robot identity."
