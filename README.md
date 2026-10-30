@@ -69,9 +69,21 @@ cd "$env:USERPROFILE\SMES-cursor-mes-robot-sender-bc04"
 powershell -ExecutionPolicy Bypass -File .\setup-mes-bot.ps1
 ```
 
-`setup-mes-bot.ps1` copies `workspace\` into `%USERPROFILE%\.openclaw\workspace`, allows group replies without @mention, retargets the MES cron job, and runs the robot-sender check.
+`setup-mes-bot.ps1` copies `workspace\` into `%USERPROFILE%\.openclaw\workspace`, enables the group with **requireMention true** (reply only on @mention), retargets the MES cron job, and runs the robot-sender check.
 
-`fix-mes-job.ps1` alone retargets MES to TT group `965235` on schedule `0 9,21 * * *` Asia/Calcutta. It does not change who is logged in — use `fix-mes-robot-sender.ps1` for that.
+`fix-mes-job.ps1` alone retargets MES to TT group `965235` on schedule `0 9,21 * * *` Asia/Calcutta. It does not change who is logged in - use `fix-mes-robot-sender.ps1` for that.
+
+## Stop replies to every person
+
+If the robot answers every message in the group, turn @mention back on:
+
+```powershell
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Rajan8771/SMES/cursor/mes-robot-sender-bc04/fix-mes-mention.ps1" -OutFile "$env:TEMP\fix-mes-mention.ps1"
+powershell -ExecutionPolicy Bypass -File "$env:TEMP\fix-mes-mention.ps1"
+```
+
+After that, people must @ the robot for a reply. The daily 9:00 AM / 9:00 PM reminder still posts by itself.
 
 ## Gateway down (`ERR_CONNECTION_REFUSED` on 18789)
 

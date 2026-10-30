@@ -78,7 +78,7 @@ if (-not $openclaw) {
     Write-Host "  openclaw config set channels.tt.enabled true"
     Write-Host "  openclaw config set channels.tt.groupPolicy open"
     Write-Host "  openclaw config set channels.tt.groups.$GroupId.enabled true"
-    Write-Host "  openclaw config set channels.tt.groups.$GroupId.requireMention false"
+    Write-Host "  openclaw config set channels.tt.groups.$GroupId.requireMention true"
     Write-Host "  openclaw gateway restart"
     exit 1
 }
@@ -87,7 +87,8 @@ Invoke-OpenClaw -Exe $openclaw -Arguments @("config", "set", "agents.defaults.wo
 Invoke-OpenClaw -Exe $openclaw -Arguments @("config", "set", "channels.tt.enabled", "true")
 Invoke-OpenClaw -Exe $openclaw -Arguments @("config", "set", "channels.tt.groupPolicy", "open")
 Invoke-OpenClaw -Exe $openclaw -Arguments @("config", "set", "channels.tt.groups.$GroupId.enabled", "true")
-Invoke-OpenClaw -Exe $openclaw -Arguments @("config", "set", "channels.tt.groups.$GroupId.requireMention", "false")
+# Only reply when someone @mentions the robot. Do not answer every group message.
+Invoke-OpenClaw -Exe $openclaw -Arguments @("config", "set", "channels.tt.groups.$GroupId.requireMention", "true")
 Invoke-OpenClaw -Exe $openclaw -Arguments @("gateway", "restart")
 
 $fixScript = Join-Path $Root "fix-mes-job.ps1"
