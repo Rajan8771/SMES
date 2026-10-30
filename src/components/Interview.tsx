@@ -14,8 +14,8 @@ export function Interview() {
           <h2>Practice the desk.</h2>
           <p>
             Questions for an MES software seat: the line, the database, and the
-            network around it. The cards below link this page, the portfolio, and
-            the public SQL banks.
+            network around it. The cards below stay on this profile or open a
+            public SQL bank.
           </p>
         </header>
 

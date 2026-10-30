@@ -7,120 +7,172 @@ export const cv = {
   filename: "Rajan Suman_Resume_P2.pdf",
 };
 
-export const company = {
-  name: "OPPO Mobiles India Private Limited",
-  spoken: "OPPO Mobile India Pvt Ltd",
-  short: "OPPO Mobile India",
-  cin: "U74140HR2013PTC069892",
-  floor: "5th Floor, Tower B, Building No. 8",
-  street: "DLF Cyber City",
-  region: "Gurugram, Haryana 122002",
-  phoneDisplay: "0124 472 7700",
-  phoneTel: "+911244727700",
-  careDisplay: "1800 103 2777",
-  careTel: "18001032777",
-  email: "infoindia@oppo.com",
-  site: "https://www.oppo.com/in",
-  maps: "https://www.google.com/maps/search/?api=1&query=OPPO+Mobiles+India+Private+Limited+DLF+Cyber+City+Gurugram",
+export const profile = {
+  name: "Rajan Suman",
+  role: "MES Software Engineer",
+  email: "sumank208@gmail.com",
+  place: "Alfa-II, Greater Noida",
+  region: "Uttar Pradesh 201308",
+  maps: "https://www.google.com/maps/search/?api=1&query=Alfa-II+Greater+Noida+Uttar+Pradesh+201308",
   mapEmbed:
-    "https://maps.google.com/maps?q=28.495019,77.089281&z=16&output=embed",
+    "https://maps.google.com/maps?q=Alfa-II,+Greater+Noida,+Uttar+Pradesh+201308&z=13&output=embed",
+  phones: [
+    { display: "+91 9038695782", tel: "+919038695782" },
+    { display: "+91 9905943006", tel: "+919905943006" },
+  ],
 };
 
-export type DepartmentId = "find" | "reno" | "a" | "enco" | "camera" | "care";
+export type ModelId = "line" | "signal" | "data" | "study";
 
-export type ModelId = "phones" | "audio" | "camera" | "care";
+export type Focus =
+  | "all"
+  | "mes"
+  | "rf"
+  | "database"
+  | "network"
+  | "hardware"
+  | "study";
 
-export type Focus = "all" | DepartmentId;
+export function modelFor(focus: Focus): ModelId | "all" {
+  if (focus === "mes" || focus === "hardware") return "line";
+  if (focus === "rf" || focus === "network") return "signal";
+  if (focus === "database") return "data";
+  if (focus === "study") return "study";
+  return "all";
+}
 
-export type Department = {
-  id: DepartmentId;
-  model: ModelId;
+export type Role = {
+  id: "mes" | "rf";
   title: string;
-  kicker: string;
-  blurb: string;
-  detail: string;
+  org: string;
+  place: string;
+  when: string;
   swatch: string;
-  ink: string;
+  points: string[];
 };
 
-export const departments: Department[] = [
+export const roles: Role[] = [
   {
-    id: "find",
-    model: "phones",
-    title: "Find",
-    kicker: "Flagship phones",
-    blurb: "The Find line, OPPO’s top slab of glass and metal.",
-    detail:
-      "Find is the flagship family. Live specs and prices sit on oppo.com/in — this page only shows the shape.",
+    id: "mes",
+    title: "MES Software Engineer",
+    org: "OPPO Mobiles India Pvt. Ltd.",
+    place: "Surface Mount Technology (SMT)",
+    when: "Jan 2021 – Present",
     swatch: "#1bd176",
-    ink: "#042414",
+    points: [
+      "MES configuration for line, order, product, flow, and material setup.",
+      "Database work in MySQL and PL/SQL: queries and stored procedures.",
+      "Real-time monitoring and integration with manufacturing equipment.",
+      "Root-cause analysis and troubleshooting of production issues.",
+      "L1 and L2 support for MES application incidents.",
+      "Network support: Active Directory, DNS, and IP configuration.",
+      "Hardware setup for Zebra printers, scanners, and Honeywell devices.",
+      "Smart Factory MOM implementation and monitoring.",
+    ],
   },
   {
-    id: "reno",
-    model: "phones",
-    title: "Reno",
-    kicker: "Portrait line",
-    blurb: "Reno phones, the portrait series OPPO sells in India.",
-    detail:
-      "Reno is the portrait line. Open the official store for the model that is on sale this month.",
-    swatch: "#ff4f9a",
-    ink: "#2a0016",
-  },
-  {
-    id: "a",
-    model: "phones",
-    title: "A series",
-    kicker: "Everyday phones",
-    blurb: "A-series phones for a daily pocket.",
-    detail:
-      "The A series is the everyday range. Colours and storage change by model — check oppo.com/in before you buy.",
-    swatch: "#49d2ff",
-    ink: "#042433",
-  },
-  {
-    id: "enco",
-    model: "audio",
-    title: "Enco",
-    kicker: "Audio",
-    blurb: "Enco buds and neckbands that pair with an OPPO phone.",
-    detail:
-      "Enco is OPPO’s audio family. The sculpture is a case and a pair of buds, not a stock list.",
+    id: "rf",
+    title: "RF Engineer",
+    org: "Telecom sector",
+    place: "2G, 3G, and 4G LTE",
+    when: "Sept 2015 – Dec 2020",
     swatch: "#ffd23f",
-    ink: "#2a2100",
-  },
-  {
-    id: "camera",
-    model: "camera",
-    title: "Camera",
-    kicker: "The lens stack",
-    blurb: "The camera island OPPO puts on the back of the phone.",
-    detail:
-      "Imaging is the raised camera island. Sensor names and zoom figures belong on the official product page.",
-    swatch: "#ff5a1f",
-    ink: "#2a0c00",
-  },
-  {
-    id: "care",
-    model: "care",
-    title: "Care",
-    kicker: "Service",
-    blurb: "Support for a phone you already own.",
-    detail:
-      "Customer care is 1800 103 2777. The registered office phone is 0124 472 7700, and mail goes to infoindia@oppo.com.",
-    swatch: "#c9a6ff",
-    ink: "#1a0a33",
+    points: [
+      "Planning and optimization of TDD, FDD, Massive MIMO, and small cells.",
+      "KPI analysis for Airtel 2G, 3G, and 4G LTE networks.",
+      "Drive tests: SCFT and SSCVT of 4G VoLTE networks.",
+      "RF survey and EMF survey execution.",
+      "Network performance analysis, reporting, and complaint resolution.",
+    ],
   },
 ];
 
-export function modelFor(focus: Focus): ModelId | "all" {
-  if (focus === "all") return "all";
-  return departments.find((item) => item.id === focus)?.model ?? "all";
-}
+export type Skill = {
+  id: "mes" | "database" | "network" | "hardware";
+  title: string;
+  swatch: string;
+  ink: string;
+  items: string[];
+};
 
-export function departmentById(focus: Focus): Department | undefined {
-  if (focus === "all") return undefined;
-  return departments.find((item) => item.id === focus);
-}
+export const skills: Skill[] = [
+  {
+    id: "mes",
+    title: "MES and smart factory",
+    swatch: "#1bd176",
+    ink: "#042414",
+    items: [
+      "Smart Factory MOM (S-MES)",
+      "EAP, VSKY, Kit Manager",
+      "Nexim, Visiset",
+      "Portable data terminals",
+      "MES setup",
+    ],
+  },
+  {
+    id: "database",
+    title: "Database",
+    swatch: "#49d2ff",
+    ink: "#042433",
+    items: ["MySQL, Oracle, DBeaver", "PL/SQL", "IntelliJ IDEA", "Scripts, stored procedures, reporting"],
+  },
+  {
+    id: "network",
+    title: "IT and networking",
+    swatch: "#ffd23f",
+    ink: "#2a2100",
+    items: ["Active Directory, DNS", "IP networks and gateways", "24/48-port switches", "IIS, ASM/ESET, Radmin"],
+  },
+  {
+    id: "hardware",
+    title: "Hardware",
+    swatch: "#ff4f9a",
+    ink: "#2a0016",
+    items: ["Zebra printers", "Data Logic scanners", "USR TCP232", "Honeywell", "Windows XP through 11"],
+  },
+];
+
+export const projects = [
+  {
+    title: "SMES PHX",
+    role: "L2 MES Engineer",
+    detail: "Support for collaboration between SMES, AMES, WMS, IPLAN, and ERP.",
+    swatch: "#49d2ff",
+  },
+  {
+    title: "Digital electronics design",
+    role: "Final-year project",
+    detail: "Digital electronics built with digital and analog instruments and ICs.",
+    swatch: "#ffd23f",
+  },
+];
+
+export const education = [
+  {
+    title: "B.Tech, ECE",
+    place: "HETC, Hooghly, MAKAUT University",
+    note: "70.6%",
+    when: "2015",
+  },
+  {
+    title: "12th",
+    place: "R. Lal College, Alinagar, Nalanda, B.S.E.B",
+    note: "60%",
+    when: "2010",
+  },
+  {
+    title: "10th",
+    place: "High School, Barbigha, B.S.E.B",
+    note: "68.2%",
+    when: "2008",
+  },
+  {
+    title: "SCADA technology training",
+    place: "ITC Limited, Munger",
+    note: "30 days",
+    when: "June–July 2014",
+  },
+];
 
 export type InterviewTopicId = "mes" | "sql" | "network" | "factory";
 
@@ -236,9 +288,9 @@ export const interviewPortals = [
     external: false,
   },
   {
-    name: "Rajan Suman portfolio",
+    name: "Earlier portfolio",
     href: "https://rajansuman007.bolt.host/",
-    note: "MES software engineer profile, projects, and contact.",
+    note: "The Bolt page. This site is the 3D profile.",
     external: true,
   },
   {
@@ -262,12 +314,12 @@ export const interviewPortals = [
 ];
 
 export const ticker = [
-  "rj_suman_mes",
-  "OPPO Mobile India",
-  "Find",
-  "Reno",
-  "A series",
-  "Enco",
-  "Gurugram",
-  "DLF Cyber City",
+  "Rajan Suman",
+  "MES Software Engineer",
+  "OPPO Mobiles India",
+  "SMT",
+  "MySQL",
+  "PL/SQL",
+  "Smart Factory",
+  "Greater Noida",
 ];

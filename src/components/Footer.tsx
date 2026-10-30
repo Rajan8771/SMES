@@ -1,30 +1,28 @@
-import { company, cv, site } from "../content";
+import { cv, profile, site } from "../content";
 
 export function Footer() {
   return (
     <footer className="footer">
       <div className="footer-inner">
         <div>
-          <p className="brand-name">{site.name}</p>
+          <p className="brand-name">{profile.name}</p>
           <p>
-            {company.name}
+            {profile.role}
             <br />
-            {company.floor}, {company.street}
+            {site.name}
             <br />
-            {company.region}
+            {profile.place}, {profile.region}
           </p>
         </div>
         <div>
-          <a href={`tel:${company.phoneTel}`}>{company.phoneDisplay}</a>
-          <a href={company.site} target="_blank" rel="noreferrer">
-            oppo.com/in
-          </a>
-          <a href="#interview">Interview Q&amp;A</a>
-          <a href="https://rajansuman007.bolt.host/" target="_blank" rel="noreferrer">
-            Portfolio
-          </a>
           <a href={cv.href} download={cv.filename}>
             Download my CV
+          </a>
+          <a href={`mailto:${profile.email}`}>{profile.email}</a>
+          <a href={`tel:${profile.phones[0].tel}`}>{profile.phones[0].display}</a>
+          <a href="#contact">Contact</a>
+          <a href="https://rajansuman007.bolt.host/" target="_blank" rel="noreferrer">
+            Earlier portfolio
           </a>
         </div>
       </div>

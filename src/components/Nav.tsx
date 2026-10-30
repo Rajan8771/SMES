@@ -1,4 +1,13 @@
-import { company, cv, site } from "../content";
+import { cv, profile, site } from "../content";
+
+const links = [
+  ["#experience", "Experience"],
+  ["#skills", "Skills"],
+  ["#projects", "Projects"],
+  ["#education", "Education"],
+  ["#interview", "Interview"],
+  ["#contact", "Contact"],
+];
 
 export function Nav() {
   return (
@@ -15,21 +24,19 @@ export function Nav() {
           </span>
         </span>
         <span>
-          <span className="brand-name">{site.name}</span>
-          <span className="brand-sub">{company.short}</span>
+          <span className="brand-name">{profile.name}</span>
+          <span className="brand-sub">{site.name}</span>
         </span>
       </a>
-      <nav aria-label="Page">
-        <a href="#departments">Lineup</a>
-        <a href="#showroom">Showroom</a>
-        <a href="#interview">Interview Q&amp;A</a>
-        <a href="#visit">Visit</a>
-        <a href={cv.href} download={cv.filename}>
-          Download CV
-        </a>
+      <nav aria-label="Profile">
+        {links.map(([href, label]) => (
+          <a key={href} href={href}>
+            {label}
+          </a>
+        ))}
       </nav>
-      <a className="btn btn-small" href={`tel:${company.phoneTel}`}>
-        Call {company.phoneDisplay}
+      <a className="btn btn-small" href={cv.href} download={cv.filename}>
+        Download CV
       </a>
     </header>
   );
