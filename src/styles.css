@@ -476,6 +476,87 @@ h2 {
   transform: translate(2px, 2px);
 }
 
+.interview {
+  background:
+    radial-gradient(circle at 90% 10%, rgba(27, 209, 118, 0.28), transparent 26%),
+    radial-gradient(circle at 8% 90%, rgba(73, 210, 255, 0.28), transparent 28%),
+    #fff6ea;
+  color: var(--ink);
+  padding: 72px 6vw 80px;
+}
+
+.interview-inner { width: min(1120px, 100%); margin: 0 auto; }
+
+.interview-pills { margin-top: 8px; }
+.topic-pill {
+  border-color: var(--ink);
+  color: var(--ink);
+  background: white;
+  box-shadow: 4px 4px 0 var(--ink);
+}
+.topic-pill[aria-pressed="true"] {
+  background: var(--swatch);
+  color: var(--ink);
+}
+
+.qa-list { display: grid; gap: 12px; margin-top: 22px; }
+
+.qa {
+  border: 3px solid var(--ink);
+  border-radius: 18px;
+  background: white;
+  box-shadow: 6px 6px 0 var(--swatch);
+}
+
+.qa h3 { margin: 0; font-size: inherit; }
+.qa button {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  text-align: left;
+  background: transparent;
+  border: 0;
+  padding: 16px 18px;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+.qa p { margin: 0; padding: 0 18px 16px; line-height: 1.45; max-width: 70ch; }
+
+.portal-title {
+  margin: 32px 0 12px;
+  font-size: 28px;
+  letter-spacing: -0.04em;
+}
+
+.portal-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 14px;
+}
+
+.portal-grid a {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-height: 140px;
+  padding: 16px;
+  text-decoration: none;
+  color: var(--ink);
+  background: white;
+  border: 3px solid var(--ink);
+  border-radius: 18px;
+  box-shadow: 6px 6px 0 #1bd176;
+  transform: perspective(500px) rotateX(4deg);
+}
+
+.portal-grid a:hover { transform: translate(-2px, -2px) rotateX(0deg); box-shadow: 8px 8px 0 #1bd176; }
+.portal-name { font-family: "Bricolage Grotesque", sans-serif; font-weight: 800; font-size: 20px; }
+
 .visit {
   background:
     linear-gradient(180deg, rgba(255, 210, 63, 0.35), transparent 24%),

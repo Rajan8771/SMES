@@ -38,8 +38,8 @@ export function Hero() {
           <a className="btn btn-cyan" href={`tel:${company.phoneTel}`}>
             Call the office
           </a>
-          <a className="text-link" href="#departments">
-            See the lineup
+          <a className="text-link" href="#interview">
+            Interview Q&amp;A
           </a>
         </div>
       </div>

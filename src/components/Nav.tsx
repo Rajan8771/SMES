@@ -22,6 +22,7 @@ export function Nav() {
       <nav aria-label="Page">
         <a href="#departments">Lineup</a>
         <a href="#showroom">Showroom</a>
+        <a href="#interview">Interview Q&amp;A</a>
         <a href="#visit">Visit</a>
       </nav>
       <a className="btn btn-small" href={`tel:${company.phoneTel}`}>

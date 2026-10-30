@@ -19,6 +19,10 @@ export function Footer() {
           <a href={company.site} target="_blank" rel="noreferrer">
             oppo.com/in
           </a>
+          <a href="#interview">Interview Q&amp;A</a>
+          <a href="https://rajansuman007.bolt.host/" target="_blank" rel="noreferrer">
+            Portfolio
+          </a>
         </div>
       </div>
     </footer>

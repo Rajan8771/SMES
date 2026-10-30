@@ -11,6 +11,8 @@ Public company details used on the page:
 - Email: infoindia@oppo.com
 - Official site: https://www.oppo.com/in
 
+The page also has an interview Q&A portal (MES, SQL, network, factory) and links out to the portfolio at https://rajansuman007.bolt.host/ plus InterviewBit, LeetCode, and GeeksforGeeks.
+
 ## Run
 
 ```bash

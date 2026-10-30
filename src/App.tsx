@@ -4,6 +4,7 @@ import { Hero, Marquee } from "./components/Hero";
 import { Departments } from "./components/Departments";
 import { Showroom } from "./components/Showroom";
 import { Visit } from "./components/Visit";
+import { Interview } from "./components/Interview";
 import { Footer } from "./components/Footer";
 import type { DepartmentId, Focus } from "./content";
 
@@ -38,6 +39,7 @@ export default function App() {
           <Marquee />
           <Departments active={focus} onPick={pick} />
           <Showroom focus={focus} onFocus={setFocus} />
+          <Interview />
           <Visit />
         </main>
         <Footer />
