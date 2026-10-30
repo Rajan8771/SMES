@@ -73,9 +73,31 @@ powershell -ExecutionPolicy Bypass -File .\setup-mes-bot.ps1
 
 `fix-mes-job.ps1` alone retargets MES to TT group `965235` on schedule `0 9,21 * * *` Asia/Calcutta. It does not change who is logged in - use `fix-mes-robot-sender.ps1` for that.
 
+## Important: @AppRobot needs Feishu, not TT
+
+If the group shows a **BOT** badge on `RAJAN SUMAN的小龙虾`, that @ is a **Feishu/Lark AppRobot** event.
+
+OpenClaw `channels.tt` (personal TT / `IN008771`) does **not** receive that @. Changing `requireMention` on `channels.tt` cannot make the AppRobot reply.
+
+**Can it work?** Yes, after you connect Feishu with that AppRobot's App ID + App Secret:
+
+```powershell
+openclaw channels login --channel feishu
+```
+
+Use manual setup (App ID + App Secret). Then get `chat_id` (`oc_...`) from group Settings and run:
+
+```powershell
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Rajan8771/SMES/cursor/mes-robot-sender-bc04/fix-feishu-robot-reply.ps1?v=1" -OutFile "$env:TEMP\fix-feishu-robot-reply.ps1"
+powershell -ExecutionPolicy Bypass -File "$env:TEMP\fix-feishu-robot-reply.ps1" -ChatId "oc_YOUR_ID"
+```
+
+**Without App ID/Secret, @ reply will not work.** Daily cron via personal TT is a different path and is not the AppRobot.
+
 ## Reply when tagged (anyone in the group)
 
-The robot should answer only when someone @tags it. If a tagged message gets no reply, run:
+The robot should answer only when someone @tags it. If a tagged message gets no reply **and Feishu is already connected**, run:
 
 ```powershell
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
