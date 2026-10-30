@@ -17,12 +17,14 @@ The script copies `workspace\` into `%USERPROFILE%\.openclaw\workspace`, allows 
 
 `fix-mes-job.ps1` retargets the existing MES cron job so it posts `Please update SMT MES issues` to TT group 965235 every day at 9:00 AM and 9:00 PM India time.
 
-If the Control UI shows `ERR_CONNECTION_REFUSED` on port 18789, the gateway is down. On the OClaw PC:
+If the Control UI shows `ERR_CONNECTION_REFUSED` on port 18789, the gateway is down. On the OClaw PC paste:
 
 ```powershell
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Rajan8771/SMES/cursor/mes-auto-reply-bc04/fix-gateway.ps1" -OutFile "$env:TEMP\fix-gateway.ps1"
 powershell -ExecutionPolicy Bypass -File "$env:TEMP\fix-gateway.ps1"
 ```
+
+Then open `http://127.0.0.1:18789/`. In Cron Jobs → MES → Run to send one test message. Daily schedule: `0 9,21 * * *` Asia/Calcutta to group 965235.
 
 Put real line checks in `workspace\MES.md`, then run the setup script again. The bot quotes only those checks. It does not invent machine settings.
