@@ -3,7 +3,7 @@ export const site = {
 };
 
 export const cv = {
-  href: "/Rajan-Suman-Resume.pdf",
+  href: `${import.meta.env.BASE_URL}Rajan-Suman-Resume.pdf`,
   filename: "Rajan Suman_Resume_P2.pdf",
 };
 

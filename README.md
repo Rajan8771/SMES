@@ -6,6 +6,12 @@ The page is built from the public CV: OPPO Mobiles India SMT work from Jan 2021,
 
 Anyone can download the CV from the hero, the navigation, and the contact card. The file is `public/Rajan-Suman-Resume.pdf`. The browser saves it as `Rajan Suman_Resume_P2.pdf`.
 
+Published site: https://rajan8771.github.io/SMES/
+
+```bash
+GITHUB_PAGES=1 npm run build
+```
+
 ## Run
 
 ```bash
