@@ -1,4 +1,4 @@
-import { company, site } from "../content";
+import { company, cv, site } from "../content";
 
 export function Footer() {
   return (
@@ -22,6 +22,9 @@ export function Footer() {
           <a href="#interview">Interview Q&amp;A</a>
           <a href="https://rajansuman007.bolt.host/" target="_blank" rel="noreferrer">
             Portfolio
+          </a>
+          <a href={cv.href} download={cv.filename}>
+            Download my CV
           </a>
         </div>
       </div>

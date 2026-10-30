@@ -13,6 +13,8 @@ Public company details used on the page:
 
 The page also has an interview Q&A portal (MES, SQL, network, factory) and links out to the portfolio at https://rajansuman007.bolt.host/ plus InterviewBit, LeetCode, and GeeksforGeeks.
 
+Anyone can download the CV from the hero, the navigation, and the footer. The file is `public/Rajan-Suman-Resume.pdf`. The browser saves it as `Rajan Suman_Resume_P2.pdf`. It was written from the public portfolio at https://rajansuman007.bolt.host/.
+
 ## Run
 
 ```bash

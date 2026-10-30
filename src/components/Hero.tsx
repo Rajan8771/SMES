@@ -1,4 +1,4 @@
-import { company, site, ticker } from "../content";
+import { company, cv, site, ticker } from "../content";
 
 export function Hero() {
   return (
@@ -32,8 +32,8 @@ export function Hero() {
           office: {company.floor}, {company.street}, {company.region}.
         </p>
         <div className="cta-row">
-          <a className="btn" href={company.site} target="_blank" rel="noreferrer">
-            oppo.com/in
+          <a className="btn" href={cv.href} download={cv.filename}>
+            Download my CV
           </a>
           <a className="btn btn-cyan" href={`tel:${company.phoneTel}`}>
             Call the office

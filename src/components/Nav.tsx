@@ -1,4 +1,4 @@
-import { company, site } from "../content";
+import { company, cv, site } from "../content";
 
 export function Nav() {
   return (
@@ -24,6 +24,9 @@ export function Nav() {
         <a href="#showroom">Showroom</a>
         <a href="#interview">Interview Q&amp;A</a>
         <a href="#visit">Visit</a>
+        <a href={cv.href} download={cv.filename}>
+          Download CV
+        </a>
       </nav>
       <a className="btn btn-small" href={`tel:${company.phoneTel}`}>
         Call {company.phoneDisplay}

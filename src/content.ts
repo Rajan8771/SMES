@@ -2,6 +2,11 @@ export const site = {
   name: "rj_suman_mes",
 };
 
+export const cv = {
+  href: "/Rajan-Suman-Resume.pdf",
+  filename: "Rajan Suman_Resume_P2.pdf",
+};
+
 export const company = {
   name: "OPPO Mobiles India Private Limited",
   spoken: "OPPO Mobile India Pvt Ltd",
