@@ -1,11 +1,11 @@
-# Make the MES cron reminder come from the robot identity, not a personal TT login.
+﻿# Make the MES cron reminder come from the robot identity, not a personal TT login.
 # Safe to run more than once. Windows PowerShell compatible.
 # Run: powershell -ExecutionPolicy Bypass -File .\fix-mes-robot-sender.ps1
 #
 # Why the 09:00 line looked like "you":
 # OpenClaw cron announce sends through the logged-in channel account.
 # If channels.tt is logged in as a personal TT user (green bubble / landscape avatar),
-# the group sees that person — not AppRobot "RAJAN SUMAN的小龙虾".
+# the group sees that person - not AppRobot "RAJAN SUMAN xiaolongxia".
 #
 # Preferred fix paths (pick one):
 #   A) TT session: log out personal TT, log in as the robot TT account, then Run MES.
@@ -16,7 +16,8 @@
 param(
     [string]$TtGroupId = "965235",
     [string]$FeishuChatId = "",
-    [string]$ExpectedRobotName = "RAJAN SUMAN的小龙虾",
+    # ASCII-only default: Windows PowerShell may mis-parse UTF-8 Chinese from raw.githubusercontent.com.
+    [string]$ExpectedRobotName = "RAJAN SUMAN xiaolongxia",
     [string[]]$PersonalAccountHints = @("IN908771"),
     [switch]$SkipCronEdit,
     [switch]$KeepLastRouteJobs
@@ -247,9 +248,9 @@ function Write-RobotLoginSteps {
 
     Write-Host ""
     Write-Host "=== Robot sender steps (OClaw PC) ==="
-    Write-Host "Goal: group 【INDIA】 SMT MES ISSUE should show $ExpectedRobotName, not your personal green bubble."
+    Write-Host "Goal: group INDIA SMT MES ISSUE should show $ExpectedRobotName, not your personal green bubble."
     Write-Host ""
-    Write-Host "Path A — keep TT, switch the logged-in TT account to the robot:"
+    Write-Host "Path A - keep TT, switch the logged-in TT account to the robot:"
     Write-Host "  1. Close the personal TT / Feishu desktop session that is logged in as you (e.g. IN908771)."
     Write-Host "  2. In an OClaw / admin terminal on this PC run:"
     Write-Host "       openclaw channels logout --channel $LogoutChannel"
@@ -259,16 +260,16 @@ function Write-RobotLoginSteps {
     Write-Host "  4. Confirm identity:"
     Write-Host "       openclaw channels status --probe"
     Write-Host "     Sender / account line must NOT show IN908771 or your personal name."
-    Write-Host "  5. Restart gateway, then Control UI → Cron Jobs → MES → Run."
+    Write-Host "  5. Restart gateway, then Control UI -> Cron Jobs -> MES -> Run."
     Write-Host ""
-    Write-Host "Path B — preferred when the group UI is Feishu/Lark with AppRobot robots:"
+    Write-Host "Path B - preferred when the group UI is Feishu/Lark with AppRobot robots:"
     Write-Host "  1. openclaw channels login --channel feishu"
     Write-Host "     Choose manual setup. Paste the App ID + App Secret for $ExpectedRobotName"
     Write-Host "     from Feishu Open Platform / Lark Developer (not your personal user QR)."
     Write-Host "  2. In Feishu group settings, copy the chat_id (looks like oc_xxx)."
     Write-Host "  3. Re-run this script with -FeishuChatId oc_xxx so MES announce uses channel=feishu."
     Write-Host "  4. openclaw channels status --probe"
-    Write-Host "  5. Control UI → Cron Jobs → MES → Run."
+    Write-Host "  5. Control UI -> Cron Jobs -> MES -> Run."
     Write-Host ""
     Write-Host "Verify: next message must show robot name/avatar as an incoming robot post,"
     Write-Host "not a right-side green bubble from your personal landscape avatar."
@@ -391,12 +392,12 @@ if (-not $SkipCronEdit) {
         Invoke-SchtasksSafe -Arguments @("/Run", "/TN", "OpenClaw Gateway")
     }
 } else {
-    Write-Host "SkipCronEdit set — left jobs.json unchanged."
+    Write-Host "SkipCronEdit set - left jobs.json unchanged."
 }
 
 Write-RobotLoginSteps -ChannelLabel $deliveryChannel -LogoutChannel $(if ($deliveryChannel -eq "feishu") { "feishu" } else { "tt" })
 
 Write-Host ""
 Write-Host "Done."
-Write-Host "If status still shows personal login, logout/login first — cron announce cannot impersonate the AppRobot while TT is your user session."
-Write-Host "Then: Control UI → Cron Jobs → MES → Run, and confirm $ExpectedRobotName posted the line."
+Write-Host "If status still shows personal login, logout/login first - cron announce cannot impersonate the AppRobot while TT is your user session."
+Write-Host "Then: Control UI -> Cron Jobs -> MES -> Run, and confirm $ExpectedRobotName posted the line."
