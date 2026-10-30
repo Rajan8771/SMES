@@ -18,7 +18,7 @@ param(
     [string]$FeishuChatId = "",
     # ASCII-only default: Windows PowerShell may mis-parse UTF-8 Chinese from raw.githubusercontent.com.
     [string]$ExpectedRobotName = "RAJAN SUMAN xiaolongxia",
-    [string[]]$PersonalAccountHints = @("IN908771"),
+    [string[]]$PersonalAccountHints = @("IN008771"),
     [switch]$SkipCronEdit,
     [switch]$KeepLastRouteJobs
 )
@@ -251,7 +251,7 @@ function Write-RobotLoginSteps {
     Write-Host "Goal: group INDIA SMT MES ISSUE should show $ExpectedRobotName, not your personal green bubble."
     Write-Host ""
     Write-Host "Path A - keep TT, switch the logged-in TT account to the robot:"
-    Write-Host "  1. Close the personal TT / Feishu desktop session that is logged in as you (e.g. IN908771)."
+    Write-Host "  1. Close the personal TT / Feishu desktop session that is logged in as you (e.g. IN008771)."
     Write-Host "  2. In an OClaw / admin terminal on this PC run:"
     Write-Host "       openclaw channels logout --channel $LogoutChannel"
     Write-Host "  3. Log TT back in as the robot account (the same identity as $ExpectedRobotName),"
@@ -259,7 +259,7 @@ function Write-RobotLoginSteps {
     Write-Host "       openclaw channels login --channel $LogoutChannel"
     Write-Host "  4. Confirm identity:"
     Write-Host "       openclaw channels status --probe"
-    Write-Host "     Sender / account line must NOT show IN908771 or your personal name."
+    Write-Host "     Sender / account line must NOT show IN008771 or your personal name."
     Write-Host "  5. Restart gateway, then Control UI -> Cron Jobs -> MES -> Run."
     Write-Host ""
     Write-Host "Path B - preferred when the group UI is Feishu/Lark with AppRobot robots:"
@@ -337,7 +337,7 @@ if ($openclaw) {
         Write-Host "CHECK OK-ish: status mentions robot/bot identity. Still confirm the next Run is not a green self-bubble."
     } else {
         Write-Host "CHECK WARN: could not prove robot identity from status text."
-        Write-Host "Open Control UI Channels and confirm the logged-in TT account is $ExpectedRobotName, not IN908771."
+        Write-Host "Open Control UI Channels and confirm the logged-in TT account is $ExpectedRobotName, not IN008771."
     }
 } else {
     Write-Host "openclaw.cmd was not found on PATH."

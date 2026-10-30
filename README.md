@@ -6,7 +6,7 @@ SMT MES auto-reply for the OClaw robot **RAJAN SUMAN的小龙虾** in the group 
 
 OpenClaw cron `announce` sends through the **logged-in channel account**.
 
-If `channels.tt` is logged in as your personal TT/Feishu user (for example `IN908771`), the reminder `Please update SMT MES issues` appears as **your** right-side green bubble with your landscape avatar — not as the AppRobot **RAJAN SUMAN的小龙虾**.
+If `channels.tt` is logged in as your personal TT/Feishu user (for example `IN008771`), the reminder `Please update SMT MES issues` appears as **your** right-side green bubble with your landscape avatar — not as the AppRobot **RAJAN SUMAN的小龙虾**.
 
 Cron cannot fake the robot while TT is still your personal session. Fix the login (or use Feishu App credentials), then Run MES again.
 
@@ -24,7 +24,7 @@ The script:
 
 1. Keeps MES delivery as `announce` → channel `tt` → group `965235` (or Feishu if you pass `-FeishuChatId`).
 2. Prints `openclaw channels status --probe` so you can see who is logged in.
-3. Warns if status looks like personal / `IN908771`.
+3. Warns if status looks like personal / `IN008771`.
 4. Prints logout / login steps for the robot.
 
 ### Path A — TT session must be the robot
