@@ -73,7 +73,17 @@ powershell -ExecutionPolicy Bypass -File .\setup-mes-bot.ps1
 
 `fix-mes-job.ps1` alone retargets MES to TT group `965235` on schedule `0 9,21 * * *` Asia/Calcutta. It does not change who is logged in - use `fix-mes-robot-sender.ps1` for that.
 
-## Important: @AppRobot needs Feishu, not TT
+## Important: AppRobot needs Feishu, not TT
+
+If the 09:00 line `Please update SMT MES issues` is a **right-side green bubble**, that is **your personal id** (`IN008771`), not AppRobot. OpenClaw cron on `channels.tt` always sends as the logged-in TT user.
+
+**Stop personal sends now:**
+
+```powershell
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Rajan8771/SMES/cursor/mes-robot-sender-bc04/stop-personal-mes-cron.ps1?v=1" -OutFile "$env:TEMP\stop-personal-mes-cron.ps1"
+powershell -ExecutionPolicy Bypass -File "$env:TEMP\stop-personal-mes-cron.ps1"
+```
 
 If the group shows a **BOT** badge on `RAJAN SUMAN的小龙虾`, that @ is a **Feishu/Lark AppRobot** event.
 
