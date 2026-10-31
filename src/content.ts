@@ -65,6 +65,7 @@ export const roles: Role[] = [
       "Real-time monitoring and integration with manufacturing equipment.",
       "Root-cause analysis and troubleshooting of production issues.",
       "L1 and L2 support for MES application incidents.",
+      "SCADA system implementation as an L3 MES Engineer on the SMT workshop.",
       "Network support: Active Directory, DNS, and IP configuration.",
       "Hardware setup for Zebra printers, scanners, and Honeywell devices.",
       "Smart Factory MOM implementation and monitoring.",
@@ -140,9 +141,9 @@ export const projects = [
     swatch: "#49d2ff",
   },
   {
-    title: "SCADA Implementation on SMT Floor",
-    role: "SMT floor",
-    detail: "SCADA implementation on the SMT floor.",
+    title: "SCADA System Implementation",
+    role: "L3 MES Engineer",
+    detail: "On the SMT workshop.",
     swatch: "#8dff63",
   },
   {
