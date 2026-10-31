@@ -140,6 +140,12 @@ export const projects = [
     swatch: "#49d2ff",
   },
   {
+    title: "SCADA Implementation on SMT Floor",
+    role: "SMT floor",
+    detail: "SCADA implementation on the SMT floor.",
+    swatch: "#8dff63",
+  },
+  {
     title: "Digital electronics design",
     role: "Final-year project",
     detail: "Digital electronics built with digital and analog instruments and ICs.",
