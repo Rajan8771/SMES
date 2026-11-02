@@ -78,7 +78,7 @@ if (-not $openclaw) {
     Write-Host "  openclaw config set channels.tt.enabled true"
     Write-Host "  openclaw config set channels.tt.groupPolicy open"
     Write-Host "  openclaw config set channels.tt.groups.$GroupId.enabled true"
-    Write-Host "  openclaw config set channels.tt.groups.$GroupId.requireMention false"
+    Write-Host "  openclaw config set channels.tt.groups.$GroupId.requireMention true"
     Write-Host "  openclaw gateway restart"
     exit 1
 }
@@ -87,7 +87,8 @@ Invoke-OpenClaw -Exe $openclaw -Arguments @("config", "set", "agents.defaults.wo
 Invoke-OpenClaw -Exe $openclaw -Arguments @("config", "set", "channels.tt.enabled", "true")
 Invoke-OpenClaw -Exe $openclaw -Arguments @("config", "set", "channels.tt.groupPolicy", "open")
 Invoke-OpenClaw -Exe $openclaw -Arguments @("config", "set", "channels.tt.groups.$GroupId.enabled", "true")
-Invoke-OpenClaw -Exe $openclaw -Arguments @("config", "set", "channels.tt.groups.$GroupId.requireMention", "false")
+# Only reply when someone @mentions the robot. Do not answer every group message.
+Invoke-OpenClaw -Exe $openclaw -Arguments @("config", "set", "channels.tt.groups.$GroupId.requireMention", "true")
 Invoke-OpenClaw -Exe $openclaw -Arguments @("gateway", "restart")
 
 $fixScript = Join-Path $Root "fix-mes-job.ps1"
@@ -96,9 +97,20 @@ if (Test-Path $fixScript) {
     if ($LASTEXITCODE -ne 0) { throw "MES job fix failed" }
 }
 
+$robotScript = Join-Path $Root "fix-mes-robot-sender.ps1"
+if (Test-Path $robotScript) {
+    Write-Host ""
+    Write-Host "Checking that cron announce will send as the robot (not personal TT)..."
+    & powershell -ExecutionPolicy Bypass -File $robotScript
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "Robot-sender check reported a problem. Read the steps above, then re-run fix-mes-robot-sender.ps1."
+    }
+}
+
 Write-Host ""
 Write-Host "MES auto-reply is on for TT group $GroupId."
 Write-Host "The bot will post 'Please update SMT MES issues' every day at 9:00 AM India time."
 Write-Host "In the INDIA SMT MES ISSUE group send: Glue line 17, final VI, CPU not working since 10:00."
 Write-Host "Add real line checks to $Dest\MES.md"
+Write-Host "If the 09:00 reminder shows as YOUR green bubble, TT is logged in as personal — run fix-mes-robot-sender.ps1."
 Write-Host "If the TT log says connection closed code=1008, log out of the robot account on the TT desktop and restart OClaw once."
