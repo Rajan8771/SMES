@@ -1,4 +1,4 @@
-﻿# Daily AppRobot reminder in BOTH groups at 9:00 AM and 9:00 PM India time.
+﻿﻿# Daily AppRobot reminder in BOTH groups at 9:00 AM and 9:00 PM India time.
 # Message: Please update SMT MES issues
 # Must send as Feishu/Lark AppRobot (Robot badge), NOT personal IN008771.
 #
@@ -24,6 +24,9 @@ $path = Join-Path $env:USERPROFILE ".openclaw\cron\jobs.json"
 foreach ($id in @($MesIssueChatId, $SmtTeChatId)) {
     if (-not $id.StartsWith("oc_")) {
         throw "Chat id must look like oc_.... Got: $id. Open group Settings and copy chat_id."
+    }
+    if ($id -match '^oc_(MES|TE|xxx|YOUR)' -or $id.Length -lt 10) {
+        throw "Placeholder chat id refused: $id. Use the real Feishu chat_id from group Settings (long oc_... value)."
     }
 }
 
@@ -63,8 +66,22 @@ Write-Host "Using: $openclaw"
 Write-Host "Channel: $Channel"
 Write-Host "Schedule: $CronExpr ($TimeZone) -> both groups"
 
+# Feishu plugin must exist first (OpenClaw 2026.4.x often lacks it until installed).
+Write-Host "Checking Feishu channel plugin..."
+$probe = & $openclaw channels status 2>&1 | Out-String
+if ($probe -notmatch "feishu") {
+    Write-Host "Feishu not listed. Installing plugin / starting login wizard..."
+    & $openclaw plugins install "@openclaw/feishu"
+    Write-Host "Run next (interactive App ID/Secret): openclaw channels login --channel feishu"
+    Write-Host "Or: powershell -File .\install-feishu-channel.ps1"
+    throw "channels.feishu is unknown until the Feishu plugin is installed and logged in. Fix that first, then rerun this script with real oc_ chat ids."
+}
+
 # Ensure Feishu is the outbound path for AppRobot.
 & $openclaw config set channels.feishu.enabled true
+if ($LASTEXITCODE -ne 0) {
+    throw "Cannot set channels.feishu (unknown channel). Install Feishu plugin first: install-feishu-channel.ps1"
+}
 & $openclaw config set channels.feishu.groupPolicy open
 & $openclaw config set ("channels.feishu.groups.{0}.enabled" -f $MesIssueChatId) true
 & $openclaw config set ("channels.feishu.groups.{0}.enabled" -f $SmtTeChatId) true
