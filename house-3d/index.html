@@ -201,11 +201,12 @@ const BASE_ROOMS = [
 
 const ALL = [...FF_ROOMS, ...BASE_ROOMS];
 
+const params = new URLSearchParams(location.search);
 const state = {
-  mode: "both", // both | ff | base
-  explode: true,
-  fullWalls: false,
-  focus: null,
+  mode: params.get("mode") === "ff" || params.get("mode") === "base" ? params.get("mode") : "both",
+  explode: params.get("stacked") !== "1",
+  fullWalls: params.get("walls") === "1",
+  focus: params.get("focus") || null,
 };
 
 const view = document.getElementById("view");
@@ -514,6 +515,42 @@ function resize() {
 window.addEventListener("resize", resize);
 resize();
 rebuild();
+setModeButtons();
+document.getElementById("btn-explode").classList.toggle("active", state.explode);
+document.getElementById("btn-solid").classList.toggle("active", !state.explode);
+document.getElementById("btn-walls").classList.toggle("active", state.fullWalls);
+
+if (params.get("view") === "top") {
+  camera.position.set(17, 70, 15.1);
+  controls.target.set(17, 0, 15);
+} else if (params.get("view") === "iso") {
+  camera.position.set(48, 36, 48);
+  controls.target.set(17, 4, 15);
+}
+controls.update();
+
+if (state.focus && meshById.has(state.focus)) {
+  highlight(state.focus);
+}
+
+window.__house3d = {
+  setMode(mode) {
+    state.mode = mode;
+    setModeButtons();
+    rebuild();
+  },
+  setExplode(v) {
+    state.explode = v;
+    document.getElementById("btn-explode").classList.toggle("active", v);
+    document.getElementById("btn-solid").classList.toggle("active", !v);
+    rebuild();
+  },
+  focus: focusRoom,
+  screenshotDataURL() {
+    renderer.render(scene, camera);
+    return renderer.domElement.toDataURL("image/png");
+  },
+};
 
 function tick() {
   controls.update();
