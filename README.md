@@ -1,15 +1,88 @@
 # SMES
 
-SMT MES auto-reply for the OClaw robot **RAJAN SUMAN的小龙虾** in the TT group 【INDIA】 SMT MES ISSUE (group id 965235).
+SMT MES auto-reply for the OClaw robot **RAJAN SUMAN的小龙虾** / MTP app **OPPO_MES** in the TT group 【INDIA】 SMT MES ISSUE (group id 965235).
 
-On the OClaw PC, Git is not required. Paste this in PowerShell:
+## Fix: robot says `Service is busy, please try again later`
+
+If you DM **OPPO_MES** (Robot badge) with `hi` and it replies **Service is busy, please try again later**, the robot app is online but **no backend is connected**. MTP has nothing to call, so it returns that default line.
+
+That is not rate-limit spam. Fix it by wiring the MTP **appId + appSecret** into OpenClaw (steps below). After setup:
+
+```powershell
+openclaw gateway restart
+openclaw channels status --probe
+```
+
+Expect **feishu** connected. Then send `hi` again to **OPPO_MES**. You should get a real agent reply, not the busy line.
+
+## Set the robot API (MTP OPPO_MES)
+
+This matches the MTP **Launch Guide** for app `OPPO_MES` (type **robot**, online).
+
+### 1) Copy credentials from MTP
+
+1. Open MTP → application **OPPO_MES**
+2. **Launch Guide** → section **Application information improvement** → **Basic Data** → **edit**  
+   (or sidebar → **Basic Information**)
+3. Copy **appId** and **appSecret**
+4. Optional: under **Application Function Development** → **robot** → **Access Guide** for send/receive message docs and permissions
+
+Do not paste secrets into chat or commit them to git.
+
+### 2) Write credentials into OpenClaw on the factory PC
 
 ```powershell
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 cd $env:USERPROFILE
-Invoke-WebRequest -Uri "https://github.com/Rajan8771/SMES/archive/refs/heads/cursor/mes-auto-reply-bc04.zip" -OutFile "$env:TEMP\SMES.zip"
+Invoke-WebRequest -Uri "https://github.com/Rajan8771/SMES/archive/refs/heads/cursor/mtp-robot-api-377a.zip?v=4" -OutFile "$env:TEMP\SMES.zip"
 Expand-Archive -Path "$env:TEMP\SMES.zip" -DestinationPath $env:USERPROFILE -Force
-cd "$env:USERPROFILE\SMES-cursor-mes-auto-reply-bc04"
+cd "$env:USERPROFILE\SMES-cursor-mtp-robot-api-377a"
+powershell -ExecutionPolicy Bypass -File .\setup-mtp-robot-api.ps1 `
+  -AppId "PASTE_APP_ID" `
+  -AppSecret "PASTE_APP_SECRET"
+```
+
+**OpenClaw 2026.4.9:** `plugins install @openclaw/feishu` fails (`plugin API >=2026.11.8`). The script loads the **bundled** feishu folder via `plugins.load.paths` and writes credentials into `openclaw.json` so you do not hit `unknown channel id: feishu`. If probe still has no feishu, run `openclaw update` and rerun.
+
+If MTP uses international Lark instead of China Feishu, add `-Domain lark`.  
+If MTP exposes a custom API host, pass `-Domain "https://your-mtp-api-host"`.
+
+### 3) Finish on MTP + groups
+
+1. In MTP, enable robot message permissions (see **robot → Access Guide**)
+2. Subscribe to receive-message events (WebSocket / long connection)
+3. Add the **OPPO_MES** robot into 【INDIA】 SMT MES ISSUE and INDIA SMT TE
+4. In each group: Settings → copy `chat_id` (`oc_...`)
+5. Rerun with chat ids:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\setup-mtp-robot-api.ps1 `
+  -AppId "PASTE_APP_ID" `
+  -AppSecret "PASTE_APP_SECRET" `
+  -MesIssueChatId "oc_MES_ISSUE" `
+  -SmtTeChatId "oc_SMT_TE"
+```
+
+### 4) Verify
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\verify-mtp-robot-api.ps1
+```
+
+Expect `feishu` connected (not only personal TT). Then in the group: `@` the robot with a fault line such as `Glue line 17, final VI, CPU not working.`
+
+---
+
+## Workspace-only setup (no API credentials)
+
+If the robot API is already connected and you only need reply rules:
+
+```powershell
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+cd $env:USERPROFILE
+Invoke-WebRequest -Uri "https://github.com/Rajan8771/SMES/archive/refs/heads/cursor/mtp-robot-api-377a.zip" -OutFile "$env:TEMP\SMES.zip"
+Expand-Archive -Path "$env:TEMP\SMES.zip" -DestinationPath $env:USERPROFILE -Force
+cd "$env:USERPROFILE\SMES-cursor-mtp-robot-api-377a"
 powershell -ExecutionPolicy Bypass -File .\setup-mes-bot.ps1
 ```
 
