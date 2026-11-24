@@ -1,27 +1,21 @@
 # Wire MTP robot OPPO_MES appId + appSecret into OpenClaw (Feishu/Lark AppRobot channel).
 #
-# Where the values come from (MTP Launch Guide screenshot):
-#   1. Open MTP -> OPPO_MES (robot, online)
-#   2. Launch Guide -> "Basic Data" -> edit
-#      OR sidebar -> Basic Information
-#   3. Copy appId and appSecret
-#   4. (Optional) robot card -> Access Guide for message API docs
+# OpenClaw 2026.4.9 note:
+#   `openclaw plugins install @openclaw/feishu` FAILS (plugin API needs >=2026.11.8).
+#   Fix: load the bundled feishu extension via plugins.load.paths, then set credentials.
+#
+# Where the values come from (MTP Launch Guide):
+#   MTP -> OPPO_MES -> Basic Data / Basic Information -> appId + appSecret
 #
 # Run on the OClaw PC:
 #   powershell -ExecutionPolicy Bypass -File .\setup-mtp-robot-api.ps1 `
-#     -AppId "cli_xxxxxxxx" `
-#     -AppSecret "xxxxxxxx" `
-#     -MesIssueChatId "oc_xxxxxxxx" `
-#     -SmtTeChatId "oc_xxxxxxxx"
-#
-# Chat ids are optional on first run. Add them later after the robot is in each group:
-#   Group Settings -> copy chat_id (starts with oc_)
+#     -AppId "22663" `
+#     -AppSecret "xxxxxxxx"
 
 [CmdletBinding()]
 param(
     [Parameter(Mandatory = $true)][string]$AppId,
     [Parameter(Mandatory = $true)][string]$AppSecret,
-    # feishu (China), lark (intl), or a custom https:// API base if MTP uses one
     [string]$Domain = "feishu",
     [string]$MesIssueChatId = "",
     [string]$SmtTeChatId = "",
@@ -36,8 +30,6 @@ function Test-LooksLikeAppId {
     param([string]$Value)
     if ([string]::IsNullOrWhiteSpace($Value)) { return $false }
     if ($Value -match '(?i)^(YOUR|PASTE|xxx|placeholder|example)') { return $false }
-    # MTP OPPO robots often use short numeric appIds (e.g. 22663).
-    # Feishu/Lark style ids look like cli_....
     if ($Value -match '^\d{3,}$') { return $true }
     if ($Value -match '(?i)^cli_[A-Za-z0-9]+$' -and $Value.Length -ge 8) { return $true }
     if ($Value.Length -ge 8) { return $true }
@@ -48,7 +40,6 @@ function Test-LooksLikeAppSecret {
     param([string]$Value)
     if ([string]::IsNullOrWhiteSpace($Value)) { return $false }
     if ($Value -match '(?i)^(YOUR_|PASTE_|xxx|placeholder|example$)') { return $false }
-    # MTP secrets are often base64; Feishu secrets are long hex/strings.
     if ($Value.Length -lt 12) { return $false }
     return $true
 }
@@ -90,6 +81,7 @@ function Find-OpenClaw {
     }
     foreach ($c in @(
         "$env:USERPROFILE\.openclaw\bin\openclaw.cmd",
+        "$env:LOCALAPPDATA\Programs\OClaw\resources\cli\openclaw.cmd",
         "$env:LOCALAPPDATA\Programs\OClaw\resources\openclaw\openclaw.cmd",
         "$env:LOCALAPPDATA\Programs\OClaw\openclaw.cmd",
         "$env:APPDATA\npm\openclaw.cmd"
@@ -126,6 +118,131 @@ function Invoke-OpenClaw {
     return $code
 }
 
+function Find-BundledFeishu {
+    $roots = @()
+    if ($env:LOCALAPPDATA) {
+        $roots += (Join-Path $env:LOCALAPPDATA "Programs\OClaw")
+    }
+    if ($env:USERPROFILE) {
+        $roots += (Join-Path $env:USERPROFILE ".openclaw")
+    }
+    $rel = @(
+        "resources\openclaw\dist\extensions\feishu",
+        "resources\openclaw\extensions\feishu",
+        "resources\cli\..\openclaw\dist\extensions\feishu",
+        "resources\app\dist\extensions\feishu",
+        "dist\extensions\feishu",
+        "extensions\feishu"
+    )
+    foreach ($root in $roots) {
+        if (-not (Test-Path $root)) { continue }
+        foreach ($r in $rel) {
+            $p = [System.IO.Path]::GetFullPath((Join-Path $root $r))
+            if (Test-Path (Join-Path $p "package.json")) { return $p }
+            if (Test-Path $p) { return $p }
+        }
+        $hit = Get-ChildItem -Path $root -Directory -Filter "feishu" -Recurse -ErrorAction SilentlyContinue |
+            Where-Object { Test-Path (Join-Path $_.FullName "package.json") } |
+            Select-Object -First 1
+        if ($hit) { return $hit.FullName }
+    }
+    return $null
+}
+
+function Get-OpenClawConfigPath {
+    foreach ($p in @(
+        (Join-Path $env:USERPROFILE ".openclaw\openclaw.json"),
+        (Join-Path $env:USERPROFILE ".openclaw\config.json")
+    )) {
+        if (Test-Path $p) { return $p }
+    }
+    $dir = Join-Path $env:USERPROFILE ".openclaw"
+    if (-not (Test-Path $dir) -and -not $DryRun) {
+        New-Item -ItemType Directory -Force -Path $dir | Out-Null
+    }
+    return (Join-Path $dir "openclaw.json")
+}
+
+function Write-FeishuConfigDirect {
+    param(
+        [Parameter(Mandatory = $true)][string]$ConfigPath,
+        [Parameter(Mandatory = $true)][string]$FeishuPathOrEmpty
+    )
+    if ($DryRun) {
+        Write-Host "[DryRun] would patch $ConfigPath with feishu credentials"
+        return
+    }
+
+    $obj = $null
+    if (Test-Path $ConfigPath) {
+        $stamp = Get-Date -Format "yyyyMMdd-HHmmss"
+        Copy-Item $ConfigPath "$ConfigPath.bak-mtp-$stamp" -Force
+        $obj = Get-Content -Path $ConfigPath -Raw -Encoding UTF8 | ConvertFrom-Json
+    } else {
+        $obj = [pscustomobject]@{}
+    }
+
+    # Ensure nested objects exist without wiping unrelated keys.
+    if (-not $obj.PSObject.Properties["plugins"]) {
+        $obj | Add-Member -NotePropertyName plugins -NotePropertyValue ([pscustomobject]@{}) -Force
+    }
+    if (-not $obj.plugins.PSObject.Properties["load"]) {
+        $obj.plugins | Add-Member -NotePropertyName load -NotePropertyValue ([pscustomobject]@{}) -Force
+    }
+    if ($FeishuPathOrEmpty) {
+        $unix = ($FeishuPathOrEmpty -replace '\\', '/')
+        $obj.plugins.load | Add-Member -NotePropertyName paths -NotePropertyValue @($unix) -Force
+        Write-Host "Set plugins.load.paths -> $unix"
+    }
+
+    if (-not $obj.PSObject.Properties["channels"]) {
+        $obj | Add-Member -NotePropertyName channels -NotePropertyValue ([pscustomobject]@{}) -Force
+    }
+    $feishu = [pscustomobject]@{
+        enabled         = $true
+        domain          = $Domain
+        connectionMode  = "websocket"
+        appId           = $AppId
+        appSecret       = $AppSecret
+        groupPolicy     = "open"
+        requireMention  = $true
+        dmPolicy        = "open"
+        accounts        = [pscustomobject]@{
+            default = [pscustomobject]@{
+                appId     = $AppId
+                appSecret = $AppSecret
+            }
+        }
+    }
+    if ($MesIssueChatId -or $SmtTeChatId) {
+        $groups = [pscustomobject]@{}
+        if ($MesIssueChatId) {
+            $groups | Add-Member -NotePropertyName $MesIssueChatId -NotePropertyValue ([pscustomobject]@{
+                enabled = $true; requireMention = $true
+            }) -Force
+        }
+        if ($SmtTeChatId) {
+            $groups | Add-Member -NotePropertyName $SmtTeChatId -NotePropertyValue ([pscustomobject]@{
+                enabled = $true; requireMention = $true
+            }) -Force
+        }
+        $feishu | Add-Member -NotePropertyName groups -NotePropertyValue $groups -Force
+    }
+    $obj.channels | Add-Member -NotePropertyName feishu -NotePropertyValue $feishu -Force
+
+    if (-not $obj.PSObject.Properties["agents"]) {
+        $obj | Add-Member -NotePropertyName agents -NotePropertyValue ([pscustomobject]@{}) -Force
+    }
+    if (-not $obj.agents.PSObject.Properties["defaults"]) {
+        $obj.agents | Add-Member -NotePropertyName defaults -NotePropertyValue ([pscustomobject]@{}) -Force
+    }
+    $obj.agents.defaults | Add-Member -NotePropertyName workspace -NotePropertyValue "~/.openclaw/workspace" -Force
+
+    $json = $obj | ConvertTo-Json -Depth 40
+    [System.IO.File]::WriteAllText($ConfigPath, $json)
+    Write-Host "Wrote Feishu/MTP credentials into $ConfigPath (secret not printed)"
+}
+
 # --- Copy workspace agent files (MES reply rules) ---
 if (-not $SkipWorkspaceCopy) {
     $Root = Split-Path -Parent $MyInvocation.MyCommand.Path
@@ -154,64 +271,58 @@ $openclaw = Find-OpenClaw
 if (-not $openclaw) {
     Write-Host ""
     Write-Host "openclaw was not found on PATH."
-    Write-Host "Credentials were validated. On the OClaw PC, install/open OClaw and rerun, or paste:"
-    Write-Host "  openclaw plugins install @openclaw/feishu"
-    Write-Host ("  openclaw config set channels.feishu.enabled true")
-    Write-Host ("  openclaw config set channels.feishu.domain {0}" -f $Domain)
-    Write-Host ("  openclaw config set channels.feishu.appId `"YOUR_APP_ID`"")
-    Write-Host ("  openclaw config set channels.feishu.appSecret `"YOUR_APP_SECRET`"")
-    Write-Host ("  openclaw config set channels.feishu.accounts.default.appId `"YOUR_APP_ID`"")
-    Write-Host ("  openclaw config set channels.feishu.accounts.default.appSecret `"YOUR_APP_SECRET`"")
-    Write-Host "  openclaw config set channels.feishu.groupPolicy open"
-    Write-Host "  openclaw config set channels.feishu.requireMention true"
-    Write-Host "  openclaw gateway restart"
-    Write-Host "  openclaw channels status --probe"
+    Write-Host "Credentials were validated. Install/open OClaw and rerun this script."
     if ($DryRun) { exit 0 }
     exit 1
 }
 
 Write-Host "Using: $openclaw"
-Invoke-OpenClaw -Exe $openclaw -Arguments @("--version") -AllowFail | Out-Null
+$verText = ""
+if (-not $DryRun) {
+    $verText = & $openclaw --version 2>&1 | Out-String
+    Write-Host $verText.Trim()
+} else {
+    Write-Host "[DryRun] openclaw --version skipped"
+}
 
+$isOld49 = ($verText -match '2026\.4\.')
 Write-Host ""
-Write-Host "1) Install Feishu plugin (needed for AppRobot API)..."
-Invoke-OpenClaw -Exe $openclaw -Arguments @("plugins", "install", "@openclaw/feishu") -AllowFail | Out-Null
+Write-Host "1) Enable Feishu channel plugin..."
+if ($isOld49) {
+    Write-Host "OpenClaw 2026.4.x detected: npm @openclaw/feishu needs API 2026.11.8+ and will fail."
+    Write-Host "Loading bundled feishu via plugins.load.paths instead."
+} else {
+    Invoke-OpenClaw -Exe $openclaw -Arguments @("plugins", "install", "@openclaw/feishu") -AllowFail | Out-Null
+}
 
+$feishuPath = Find-BundledFeishu
+if ($feishuPath) {
+    Write-Host "Found bundled feishu: $feishuPath"
+} else {
+    Write-Host "WARN: no bundled feishu extension found under OClaw install."
+    Write-Host "Try: openclaw update   (needs 2026.5.29+ / plugin API 2026.11.8+ for npm feishu)"
+}
+
+$configPath = Get-OpenClawConfigPath
 Write-Host ""
-Write-Host "2) Write MTP appId/appSecret into channels.feishu..."
-Invoke-OpenClaw -Exe $openclaw -Arguments @("config", "set", "agents.defaults.workspace", "~/.openclaw/workspace")
-Invoke-OpenClaw -Exe $openclaw -Arguments @("config", "set", "channels.feishu.enabled", "true")
-Invoke-OpenClaw -Exe $openclaw -Arguments @("config", "set", "channels.feishu.domain", $Domain)
-Invoke-OpenClaw -Exe $openclaw -Arguments @("config", "set", "channels.feishu.connectionMode", "websocket")
-Invoke-OpenClaw -Exe $openclaw -Arguments @("config", "set", "channels.feishu.appId", $AppId)
-Invoke-OpenClaw -Exe $openclaw -Arguments @("config", "set", "channels.feishu.appSecret", $AppSecret)
-Invoke-OpenClaw -Exe $openclaw -Arguments @("config", "set", "channels.feishu.accounts.default.appId", $AppId)
-Invoke-OpenClaw -Exe $openclaw -Arguments @("config", "set", "channels.feishu.accounts.default.appSecret", $AppSecret)
-Invoke-OpenClaw -Exe $openclaw -Arguments @("config", "set", "channels.feishu.groupPolicy", "open")
-Invoke-OpenClaw -Exe $openclaw -Arguments @("config", "set", "channels.feishu.requireMention", "true")
-Invoke-OpenClaw -Exe $openclaw -Arguments @("config", "set", "channels.feishu.dmPolicy", "pairing")
+Write-Host "2) Write MTP appId/appSecret (direct config patch — avoids unknown channel id: feishu)..."
+Write-FeishuConfigDirect -ConfigPath $configPath -FeishuPathOrEmpty $(if ($feishuPath) { $feishuPath } else { "" })
 
-# Keep TT group config for personal-channel fallback (do not use TT for AppRobot send).
+# Best-effort CLI mirrors (may fail on 2026.4.9 before plugin load; already patched JSON).
+Invoke-OpenClaw -Exe $openclaw -Arguments @("config", "set", "agents.defaults.workspace", "~/.openclaw/workspace") -AllowFail | Out-Null
+if ($feishuPath) {
+    $unix = ($feishuPath -replace '\\', '/')
+    Invoke-OpenClaw -Exe $openclaw -Arguments @("config", "set", "plugins.load.paths", ("[`"{0}`"]" -f $unix)) -AllowFail | Out-Null
+}
+
+# Keep TT group config for personal-channel fallback.
 Invoke-OpenClaw -Exe $openclaw -Arguments @("config", "set", "channels.tt.enabled", "true") -AllowFail | Out-Null
 Invoke-OpenClaw -Exe $openclaw -Arguments @("config", "set", "channels.tt.groupPolicy", "open") -AllowFail | Out-Null
 Invoke-OpenClaw -Exe $openclaw -Arguments @("config", "set", ("channels.tt.groups.{0}.enabled" -f $TtGroupId), "true") -AllowFail | Out-Null
 Invoke-OpenClaw -Exe $openclaw -Arguments @("config", "set", ("channels.tt.groups.{0}.requireMention" -f $TtGroupId), "true") -AllowFail | Out-Null
 
-if ($MesIssueChatId) {
-    Write-Host ""
-    Write-Host "3) Enable MES ISSUE group $MesIssueChatId"
-    Invoke-OpenClaw -Exe $openclaw -Arguments @("config", "set", ("channels.feishu.groups.{0}.enabled" -f $MesIssueChatId), "true")
-    Invoke-OpenClaw -Exe $openclaw -Arguments @("config", "set", ("channels.feishu.groups.{0}.requireMention" -f $MesIssueChatId), "true")
-}
-if ($SmtTeChatId) {
-    Write-Host ""
-    Write-Host "3b) Enable SMT TE group $SmtTeChatId"
-    Invoke-OpenClaw -Exe $openclaw -Arguments @("config", "set", ("channels.feishu.groups.{0}.enabled" -f $SmtTeChatId), "true")
-    Invoke-OpenClaw -Exe $openclaw -Arguments @("config", "set", ("channels.feishu.groups.{0}.requireMention" -f $SmtTeChatId), "true")
-}
-
 Write-Host ""
-Write-Host "4) Restart gateway and probe..."
+Write-Host "3) Restart gateway and probe..."
 $ErrorActionPreference = "Continue"
 Invoke-OpenClaw -Exe $openclaw -Arguments @("gateway", "stop") -AllowFail | Out-Null
 Start-Sleep -Seconds 3
@@ -224,16 +335,11 @@ Write-Host ""
 Write-Host "=== Done ==="
 Write-Host "SUCCESS look: channels status shows feishu connected (not only personal TT)."
 Write-Host ""
+Write-Host "If probe still has no feishu on OpenClaw 2026.4.9:"
+Write-Host "  1) Confirm a feishu folder exists under OClaw (dist\extensions\feishu)"
+Write-Host "  2) Or upgrade: openclaw update   then rerun this script"
+Write-Host "  3) Alternate outbound-only path: Feishu Custom Bot webhook (PR mes-robot-webhook)"
+Write-Host ""
 Write-Host "Why DM said 'Service is busy, please try again later':"
-Write-Host "  OPPO_MES was online with no backend. After this API setup + gateway up, that default stops."
-Write-Host "  Retest DM: open OPPO_MES chat and send hi."
-Write-Host ""
-Write-Host "Still on MTP (recommended):"
-Write-Host "  - Basic Information: confirm app is online"
-Write-Host "  - robot Access Guide: enable receive/send message permissions"
-Write-Host "  - Event subscription: im.message.receive_v1 (WebSocket / long connection)"
-Write-Host "  - Add OPPO_MES robot into 【INDIA】SMT MES ISSUE and INDIA SMT TE"
-Write-Host ""
-Write-Host "Then copy each group chat_id (oc_...) and rerun with -MesIssueChatId / -SmtTeChatId."
-Write-Host "Test in group: @ the robot with a fault line, e.g. Glue line 17, final VI, CPU not working."
+Write-Host "  OPPO_MES was online with no backend. After feishu connects, send hi again."
 Write-Host "Watch: openclaw logs --follow"

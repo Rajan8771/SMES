@@ -34,13 +34,15 @@ Do not paste secrets into chat or commit them to git.
 ```powershell
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 cd $env:USERPROFILE
-Invoke-WebRequest -Uri "https://github.com/Rajan8771/SMES/archive/refs/heads/cursor/mtp-robot-api-377a.zip" -OutFile "$env:TEMP\SMES.zip"
+Invoke-WebRequest -Uri "https://github.com/Rajan8771/SMES/archive/refs/heads/cursor/mtp-robot-api-377a.zip?v=3" -OutFile "$env:TEMP\SMES.zip"
 Expand-Archive -Path "$env:TEMP\SMES.zip" -DestinationPath $env:USERPROFILE -Force
 cd "$env:USERPROFILE\SMES-cursor-mtp-robot-api-377a"
 powershell -ExecutionPolicy Bypass -File .\setup-mtp-robot-api.ps1 `
   -AppId "PASTE_APP_ID" `
   -AppSecret "PASTE_APP_SECRET"
 ```
+
+**OpenClaw 2026.4.9:** `plugins install @openclaw/feishu` fails (`plugin API >=2026.11.8`). The script loads the **bundled** feishu folder via `plugins.load.paths` and writes credentials into `openclaw.json` so you do not hit `unknown channel id: feishu`. If probe still has no feishu, run `openclaw update` and rerun.
 
 If MTP uses international Lark instead of China Feishu, add `-Domain lark`.  
 If MTP exposes a custom API host, pass `-Domain "https://your-mtp-api-host"`.

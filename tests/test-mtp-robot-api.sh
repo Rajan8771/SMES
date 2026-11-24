@@ -43,10 +43,16 @@ else
   echo "FAIL setup may print secrets"
   fail=1
 fi
-if grep -q 'channels.feishu.appId' setup-mtp-robot-api.ps1 && grep -q 'channels.feishu.appSecret' setup-mtp-robot-api.ps1; then
-  echo "OK setup writes feishu appId/appSecret"
+if grep -q 'Write-FeishuConfigDirect' setup-mtp-robot-api.ps1 && grep -q 'Find-BundledFeishu' setup-mtp-robot-api.ps1; then
+  echo "OK setup patches config + loads bundled feishu for 2026.4.9"
 else
-  echo "FAIL setup does not set feishu credentials"
+  echo "FAIL setup missing 2026.4.9 bundled-feishu path"
+  fail=1
+fi
+if grep -q 'plugins.load.paths' setup-mtp-robot-api.ps1; then
+  echo "OK setup mentions plugins.load.paths"
+else
+  echo "FAIL setup missing plugins.load.paths"
   fail=1
 fi
 
