@@ -21,7 +21,7 @@ need verify-mtp-robot-api.ps1
 need README.md
 
 # README must document the MTP Launch Guide path from the screenshot.
-for phrase in "OPPO_MES" "appId" "appSecret" "Basic Data" "Basic Information" "setup-mtp-robot-api.ps1"; do
+for phrase in "OPPO_MES" "appId" "appSecret" "Basic Data" "Basic Information" "setup-mtp-robot-api.ps1" "Service is busy"; do
   if grep -q "$phrase" README.md; then
     echo "OK README mentions $phrase"
   else

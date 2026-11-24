@@ -2,6 +2,19 @@
 
 SMT MES auto-reply for the OClaw robot **RAJAN SUMAN的小龙虾** / MTP app **OPPO_MES** in the TT group 【INDIA】 SMT MES ISSUE (group id 965235).
 
+## Fix: robot says `Service is busy, please try again later`
+
+If you DM **OPPO_MES** (Robot badge) with `hi` and it replies **Service is busy, please try again later**, the robot app is online but **no backend is connected**. MTP has nothing to call, so it returns that default line.
+
+That is not rate-limit spam. Fix it by wiring the MTP **appId + appSecret** into OpenClaw (steps below). After setup:
+
+```powershell
+openclaw gateway restart
+openclaw channels status --probe
+```
+
+Expect **feishu** connected. Then send `hi` again to **OPPO_MES**. You should get a real agent reply, not the busy line.
+
 ## Set the robot API (MTP OPPO_MES)
 
 This matches the MTP **Launch Guide** for app `OPPO_MES` (type **robot**, online).
