@@ -305,7 +305,7 @@ if ($feishuPath) {
 
 $configPath = Get-OpenClawConfigPath
 Write-Host ""
-Write-Host "2) Write MTP appId/appSecret (direct config patch — avoids unknown channel id: feishu)..."
+Write-Host "2) Write MTP appId/appSecret (direct config patch - avoids unknown channel id: feishu)..."
 Write-FeishuConfigDirect -ConfigPath $configPath -FeishuPathOrEmpty $(if ($feishuPath) { $feishuPath } else { "" })
 
 # Best-effort CLI mirrors (may fail on 2026.4.9 before plugin load; already patched JSON).

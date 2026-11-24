@@ -34,7 +34,7 @@ Do not paste secrets into chat or commit them to git.
 ```powershell
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 cd $env:USERPROFILE
-Invoke-WebRequest -Uri "https://github.com/Rajan8771/SMES/archive/refs/heads/cursor/mtp-robot-api-377a.zip?v=3" -OutFile "$env:TEMP\SMES.zip"
+Invoke-WebRequest -Uri "https://github.com/Rajan8771/SMES/archive/refs/heads/cursor/mtp-robot-api-377a.zip?v=4" -OutFile "$env:TEMP\SMES.zip"
 Expand-Archive -Path "$env:TEMP\SMES.zip" -DestinationPath $env:USERPROFILE -Force
 cd "$env:USERPROFILE\SMES-cursor-mtp-robot-api-377a"
 powershell -ExecutionPolicy Bypass -File .\setup-mtp-robot-api.ps1 `

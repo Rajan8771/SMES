@@ -95,7 +95,7 @@ if (-not $feishu) {
         $names = @($groups.PSObject.Properties | ForEach-Object { $_.Name })
         Write-Host ("feishu groups = {0}" -f (($names -join ", ")))
     } else {
-        Write-Host "feishu groups = (none yet) — add oc_ chat ids after robot joins the groups"
+        Write-Host "feishu groups = (none yet) - add oc_ chat ids after robot joins the groups"
     }
 }
 

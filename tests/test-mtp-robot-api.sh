@@ -20,6 +20,17 @@ need setup-mtp-robot-api.ps1
 need verify-mtp-robot-api.ps1
 need README.md
 
+# Windows PowerShell 5.1 mis-parses UTF-8 dashes/quotes as broken strings.
+for f in setup-mtp-robot-api.ps1 verify-mtp-robot-api.ps1; do
+  if LC_ALL=C grep -n '[^[:print:][:space:]]' "$f" >/dev/null; then
+    echo "FAIL non-ASCII bytes in $f (breaks Windows PowerShell)"
+    LC_ALL=C grep -n '[^[:print:][:space:]]' "$f" || true
+    fail=1
+  else
+    echo "OK ASCII-only $f"
+  fi
+done
+
 # README must document the MTP Launch Guide path from the screenshot.
 for phrase in "OPPO_MES" "appId" "appSecret" "Basic Data" "Basic Information" "setup-mtp-robot-api.ps1" "Service is busy"; do
   if grep -q "$phrase" README.md; then
