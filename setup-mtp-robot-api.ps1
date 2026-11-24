@@ -36,7 +36,20 @@ function Test-LooksLikeAppId {
     param([string]$Value)
     if ([string]::IsNullOrWhiteSpace($Value)) { return $false }
     if ($Value -match '(?i)^(YOUR|PASTE|xxx|placeholder|example)') { return $false }
-    if ($Value.Length -lt 8) { return $false }
+    # MTP OPPO robots often use short numeric appIds (e.g. 22663).
+    # Feishu/Lark style ids look like cli_....
+    if ($Value -match '^\d{3,}$') { return $true }
+    if ($Value -match '(?i)^cli_[A-Za-z0-9]+$' -and $Value.Length -ge 8) { return $true }
+    if ($Value.Length -ge 8) { return $true }
+    return $false
+}
+
+function Test-LooksLikeAppSecret {
+    param([string]$Value)
+    if ([string]::IsNullOrWhiteSpace($Value)) { return $false }
+    if ($Value -match '(?i)^(YOUR_|PASTE_|xxx|placeholder|example$)') { return $false }
+    # MTP secrets are often base64; Feishu secrets are long hex/strings.
+    if ($Value.Length -lt 12) { return $false }
     return $true
 }
 
@@ -49,7 +62,7 @@ function Test-LooksLikeChatId {
 if (-not (Test-LooksLikeAppId $AppId)) {
     throw "AppId looks empty or like a placeholder. Copy the real appId from MTP Basic Information / Basic Data."
 }
-if (-not (Test-LooksLikeAppId $AppSecret)) {
+if (-not (Test-LooksLikeAppSecret $AppSecret)) {
     throw "AppSecret looks empty or like a placeholder. Copy the real appSecret from MTP Basic Information / Basic Data."
 }
 if (-not (Test-LooksLikeChatId $MesIssueChatId)) {

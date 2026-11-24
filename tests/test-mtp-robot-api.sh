@@ -59,16 +59,23 @@ fi
 
 if [[ -n "$PWSH_BIN" ]]; then
   echo "Running pwsh DryRun validation with $PWSH_BIN ..."
-  if "$PWSH_BIN" -NoProfile -File ./setup-mtp-robot-api.ps1 -AppId "YOUR_APP_ID" -AppSecret "secret12345" -DryRun -SkipWorkspaceCopy; then
+  if "$PWSH_BIN" -NoProfile -File ./setup-mtp-robot-api.ps1 -AppId "YOUR_APP_ID" -AppSecret "secret12345xx" -DryRun -SkipWorkspaceCopy; then
     echo "FAIL placeholder AppId should be rejected"
     fail=1
   else
     echo "OK placeholder AppId rejected"
   fi
   if "$PWSH_BIN" -NoProfile -File ./setup-mtp-robot-api.ps1 -AppId "cli_test_app_01" -AppSecret "secret_value_ok" -DryRun -SkipWorkspaceCopy; then
-    echo "OK DryRun accepts non-placeholder credentials without OpenClaw"
+    echo "OK DryRun accepts Feishu-style credentials without OpenClaw"
   else
-    echo "FAIL DryRun with valid-looking credentials failed"
+    echo "FAIL DryRun with Feishu-style credentials failed"
+    fail=1
+  fi
+  # MTP OPPO_MES uses short numeric appId (real factory format).
+  if "$PWSH_BIN" -NoProfile -File ./setup-mtp-robot-api.ps1 -AppId "22663" -AppSecret "MjI2NjNPUFBX01FUX1RFU1RfT05MWT09" -DryRun -SkipWorkspaceCopy; then
+    echo "OK DryRun accepts short numeric MTP appId"
+  else
+    echo "FAIL short numeric MTP appId should be accepted"
     fail=1
   fi
   if "$PWSH_BIN" -NoProfile -File ./setup-mtp-robot-api.ps1 -AppId "cli_test_app_01" -AppSecret "secret_value_ok" -MesIssueChatId "oc_MES" -DryRun -SkipWorkspaceCopy; then
